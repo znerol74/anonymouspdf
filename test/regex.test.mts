@@ -119,6 +119,26 @@ test('ipv4 rejects out-of-range', () => {
   assert.equal(of('Wert 999.1.1.1 ungültig', 'IP').length, 0);
 });
 
+// --- DATE ---
+test('date numeric dotted', () => {
+  assert.ok(of('Vertrag vom 15.03.2024 unterzeichnet', 'DATE').some((h) => h.text === '15.03.2024'));
+});
+test('date iso', () => {
+  assert.ok(of('Stichtag 2024-12-31 endet', 'DATE').some((h) => h.text === '2024-12-31'));
+});
+test('date month name de', () => {
+  assert.ok(of('fällig am 15. März 2024 abends', 'DATE').some((h) => h.text.includes('März 2024')));
+});
+test('date month name en', () => {
+  assert.ok(of('signed on March 15, 2024 here', 'DATE').some((h) => h.text.includes('March 15, 2024')));
+});
+test('date standalone year', () => {
+  assert.ok(of('Tax Return 2024 filed', 'DATE').some((h) => h.text === '2024'));
+});
+test('date does not flag a plain four-digit non-year', () => {
+  assert.equal(of('Artikel 1234 auf Lager', 'DATE').length, 0);
+});
+
 // --- Overlap resolution ---
 test('higher precedence wins overlap', () => {
   const spans: DetectedSpan[] = [

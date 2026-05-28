@@ -16,6 +16,7 @@ export interface ToolStrings {
   found: string;
   nothing: string;
   downloadPdf: string;
+  downloadText: string;
   copyText: string;
   copied: string;
   again: string;
@@ -32,15 +33,16 @@ export const toolStrings: Record<Lang, ToolStrings> = {
     privacy: 'Your file is processed in your browser and is never uploaded.',
     reading: 'Reading file…',
     extracting: 'Reading the document…',
-    modelLoading: 'Loading the AI model…',
-    modelNote: 'First time only — the model downloads once, then your browser caches it.',
+    modelLoading: 'Processing…',
+    modelNote: 'The first run may take a moment — everything stays in your browser.',
     detecting: 'Finding sensitive data…',
     rendering: 'Applying redactions…',
-    doneTitle: 'Done — redactions applied',
-    found: 'items redacted',
+    doneTitle: 'Done — data replaced',
+    found: 'items replaced',
     nothing:
       'No sensitive data was detected automatically. Review the document yourself before sharing it.',
     downloadPdf: 'Download PDF',
+    downloadText: 'Download text',
     copyText: 'Copy text',
     copied: 'Copied!',
     again: 'Redact another PDF',
@@ -62,6 +64,7 @@ export const toolStrings: Record<Lang, ToolStrings> = {
       KENNZEICHEN: 'License plates',
       URL: 'URLs',
       IP: 'IP addresses',
+      DATE: 'Dates',
     },
   },
   de: {
@@ -70,15 +73,16 @@ export const toolStrings: Record<Lang, ToolStrings> = {
     privacy: 'Ihre Datei wird im Browser verarbeitet und niemals hochgeladen.',
     reading: 'Datei wird gelesen…',
     extracting: 'Dokument wird gelesen…',
-    modelLoading: 'KI-Modell wird geladen…',
-    modelNote: 'Nur beim ersten Mal — das Modell wird einmalig geladen und dann im Browser gespeichert.',
+    modelLoading: 'Wird verarbeitet…',
+    modelNote: 'Der erste Durchlauf kann einen Moment dauern — alles bleibt in Ihrem Browser.',
     detecting: 'Sensible Daten werden gesucht…',
     rendering: 'Schwärzungen werden angewendet…',
-    doneTitle: 'Fertig — Schwärzungen angewendet',
-    found: 'Einträge geschwärzt',
+    doneTitle: 'Fertig — Daten ersetzt',
+    found: 'Einträge ersetzt',
     nothing:
       'Es wurden automatisch keine sensiblen Daten erkannt. Bitte prüfen Sie das Dokument selbst, bevor Sie es weitergeben.',
     downloadPdf: 'PDF herunterladen',
+    downloadText: 'Text herunterladen',
     copyText: 'Text kopieren',
     copied: 'Kopiert!',
     again: 'Weiteres PDF schwärzen',
@@ -100,6 +104,7 @@ export const toolStrings: Record<Lang, ToolStrings> = {
       KENNZEICHEN: 'Kennzeichen',
       URL: 'URLs',
       IP: 'IP-Adressen',
+      DATE: 'Datumsangaben',
     },
   },
 };

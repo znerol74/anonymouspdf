@@ -3,24 +3,64 @@ import { runRegexLayer, resolveOverlaps } from '../tool/detect';
 import { runNer } from '../tool/detect/ner';
 import { loadPdf, extractPages } from '../tool/pdf/extract';
 import { redactToPdf } from '../tool/pdf/redact';
-import { redactText } from '../tool/redactText';
+import { buildPseudonyms, applyPseudonyms, pseudonymFor } from '../tool/anonymize';
 import { toolStrings, type Lang } from '../tool/strings';
 import type { DetectedSpan, EntityType } from '../tool/types';
 
 type Phase = 'idle' | 'reading' | 'extracting' | 'model' | 'detecting' | 'rendering' | 'done' | 'error';
 
+const PREVIEW_PAGES = 3;
+
+const TYPE_COLORS: Record<EntityType, { bg: string; fg: string }> = {
+  PERSON: { bg: '#dbeafe', fg: '#1e3a8a' },
+  ORG: { bg: '#e0e7ff', fg: '#3730a3' },
+  ADRESSE: { bg: '#dcfce7', fg: '#166534' },
+  EMAIL: { bg: '#ccfbf1', fg: '#115e59' },
+  TELEFON: { bg: '#cffafe', fg: '#155e75' },
+  IBAN: { bg: '#fef3c7', fg: '#92400e' },
+  CREDIT_CARD: { bg: '#ffedd5', fg: '#9a3412' },
+  SVNR: { bg: '#ffe4e6', fg: '#9f1239' },
+  AKTENZEICHEN: { bg: '#f3e8ff', fg: '#6b21a8' },
+  FN: { bg: '#ecfccb', fg: '#3f6212' },
+  EZ: { bg: '#d1fae5', fg: '#065f46' },
+  KENNZEICHEN: { bg: '#fae8ff', fg: '#86198f' },
+  URL: { bg: '#e0f2fe', fg: '#075985' },
+  IP: { bg: '#e2e8f0', fg: '#334155' },
+  DATE: { bg: '#fef9c3', fg: '#854d0e' },
+};
+
 interface Props {
   lang: Lang;
 }
 
+interface Segment {
+  text: string;
+  type?: EntityType;
+}
+
 interface Done {
-  previews: string[];
+  preview: Segment[][];
+  morePages: number;
   redactedText: string;
   pdfBytes: Uint8Array;
   counts: { type: EntityType; n: number }[];
   total: number;
-  pages: number;
+  pageCount: number;
   fileName: string;
+}
+
+function toSegments(text: string, spans: DetectedSpan[]): Segment[] {
+  const sorted = [...spans].sort((a, b) => a.start - b.start);
+  const segs: Segment[] = [];
+  let cursor = 0;
+  for (const s of sorted) {
+    if (s.start < cursor) continue;
+    if (s.start > cursor) segs.push({ text: text.slice(cursor, s.start) });
+    segs.push({ text: text.slice(s.start, s.end), type: s.type });
+    cursor = s.end;
+  }
+  if (cursor < text.length) segs.push({ text: text.slice(cursor) });
+  return segs;
 }
 
 function Spinner() {
@@ -77,9 +117,14 @@ export default function RedactionTool({ lang }: Props) {
           spansByPage.push(resolveOverlaps([...regexSpans, ...nerSpans]));
         }
 
+        const pseudonyms = buildPseudonyms(spansByPage);
+
         setPhase('rendering');
-        const { pdfBytes, previews, redactionCount } = await redactToPdf(doc, pages, spansByPage);
-        const redacted = pages.map((p, i) => redactText(p.text, spansByPage[i], lang)).join('\n\n');
+        const { pdfBytes, redactionCount } = await redactToPdf(doc, pages, spansByPage, (s) =>
+          pseudonymFor(s, pseudonyms),
+        );
+        const redacted = pages.map((p, i) => applyPseudonyms(p.text, spansByPage[i], pseudonyms)).join('\n\n');
+        const preview = pages.slice(0, PREVIEW_PAGES).map((p, i) => toSegments(p.text, spansByPage[i]));
 
         const tally = new Map<EntityType, number>();
         for (const spans of spansByPage) {
@@ -90,12 +135,13 @@ export default function RedactionTool({ lang }: Props) {
           .sort((a, b) => b.n - a.n);
 
         setResult({
-          previews,
+          preview,
+          morePages: Math.max(0, pages.length - PREVIEW_PAGES),
           redactedText: redacted,
           pdfBytes,
           counts,
           total: redactionCount,
-          pages: pages.length,
+          pageCount: pages.length,
           fileName: file.name.replace(/\.pdf$/i, ''),
         });
         setPhase('done');
@@ -105,7 +151,7 @@ export default function RedactionTool({ lang }: Props) {
         setPhase('error');
       }
     },
-    [lang, t],
+    [t],
   );
 
   const onInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -127,7 +173,18 @@ export default function RedactionTool({ lang }: Props) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${result.fileName || 'document'}-redacted.pdf`;
+    a.download = `${result.fileName || 'document'}-anonymized.pdf`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const downloadText = () => {
+    if (!result) return;
+    const blob = new Blob([result.redactedText], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${result.fileName || 'document'}-anonymized.txt`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -208,7 +265,7 @@ export default function RedactionTool({ lang }: Props) {
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
           <h3 className="text-lg font-bold text-slate-900">{t.doneTitle}</h3>
           <p className="mt-1 text-sm text-slate-600">
-            <span className="font-semibold text-brand-700">{result.total}</span> {t.found} · {result.pages}{' '}
+            <span className="font-semibold text-brand-700">{result.total}</span> {t.found} · {result.pageCount}{' '}
             {t.pages}
           </p>
 
@@ -219,7 +276,8 @@ export default function RedactionTool({ lang }: Props) {
               {result.counts.map((c) => (
                 <span
                   key={c.type}
-                  className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700"
+                  className="rounded-full px-3 py-1 text-xs font-medium"
+                  style={{ backgroundColor: TYPE_COLORS[c.type].bg, color: TYPE_COLORS[c.type].fg }}
                 >
                   {t.typeNames[c.type]}: {c.n}
                 </span>
@@ -227,16 +285,34 @@ export default function RedactionTool({ lang }: Props) {
             </div>
           )}
 
-          {result.previews.length > 0 ? (
-            <div className="mt-6 flex gap-3 overflow-x-auto pb-2">
-              {result.previews.map((src, i) => (
-                <img
+          {result.total > 0 ? (
+            <div className="mt-6 max-h-96 overflow-auto rounded-lg border border-slate-200 bg-slate-50 p-4">
+              {result.preview.map((segments, i) => (
+                <p
                   key={i}
-                  src={src}
-                  alt={`Page ${i + 1}`}
-                  className="h-56 w-auto flex-none rounded border border-slate-200"
-                />
+                  className="whitespace-pre-wrap break-words font-mono text-[13px] leading-relaxed text-slate-800"
+                >
+                  {segments.map((seg, j) =>
+                    seg.type ? (
+                      <mark
+                        key={j}
+                        className="rounded px-0.5"
+                        style={{ backgroundColor: TYPE_COLORS[seg.type].bg, color: TYPE_COLORS[seg.type].fg }}
+                        title={t.typeNames[seg.type]}
+                      >
+                        {seg.text}
+                      </mark>
+                    ) : (
+                      <span key={j}>{seg.text}</span>
+                    ),
+                  )}
+                </p>
               ))}
+              {result.morePages > 0 ? (
+                <p className="mt-3 text-xs text-slate-500">
+                  +{result.morePages} {t.pages}
+                </p>
+              ) : null}
             </div>
           ) : null}
 
@@ -247,6 +323,13 @@ export default function RedactionTool({ lang }: Props) {
               className="rounded-lg bg-brand-600 px-5 py-2.5 font-semibold text-white hover:bg-brand-700"
             >
               {t.downloadPdf}
+            </button>
+            <button
+              type="button"
+              onClick={downloadText}
+              className="rounded-lg border border-slate-300 px-5 py-2.5 font-semibold text-slate-700 hover:bg-slate-50"
+            >
+              {t.downloadText}
             </button>
             <button
               type="button"

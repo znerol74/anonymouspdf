@@ -8,7 +8,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "test": "tsx test/regex.test.mts && tsx test/ner.test.mts"
+    "test": "tsx test/regex.test.mts && tsx test/ner.test.mts && tsx test/anonymize.test.mts"
   },
   "dependencies": {
     "@astrojs/react": "^4.2.0",

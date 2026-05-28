@@ -17,7 +17,8 @@ export type EntityType =
   | 'TELEFON'
   | 'ADRESSE'
   | 'ORG'
-  | 'PERSON';
+  | 'PERSON'
+  | 'DATE';
 
 export type DetectionSource = 'regex' | 'ner';
 
@@ -47,40 +48,28 @@ export const PRECEDENCE: Record<EntityType, number> = {
   ADRESSE: 50,
   ORG: 40,
   PERSON: 35,
+  DATE: 20,
 };
 
-/** Replacement labels used in the "copy text" output. */
-export const TYPE_LABELS: Record<'en' | 'de', Record<EntityType, string>> = {
-  en: {
-    PERSON: '[NAME]',
-    ORG: '[ORGANISATION]',
-    ADRESSE: '[ADDRESS]',
-    EMAIL: '[EMAIL]',
-    TELEFON: '[PHONE]',
-    IBAN: '[IBAN]',
-    CREDIT_CARD: '[CARD]',
-    SVNR: '[SSN]',
-    AKTENZEICHEN: '[CASE-NO]',
-    FN: '[COMPANY-NO]',
-    EZ: '[LAND-REG]',
-    KENNZEICHEN: '[PLATE]',
-    URL: '[URL]',
-    IP: '[IP]',
-  },
-  de: {
-    PERSON: '[NAME]',
-    ORG: '[ORGANISATION]',
-    ADRESSE: '[ADRESSE]',
-    EMAIL: '[E-MAIL]',
-    TELEFON: '[TELEFON]',
-    IBAN: '[IBAN]',
-    CREDIT_CARD: '[KARTE]',
-    SVNR: '[SVNR]',
-    AKTENZEICHEN: '[AKTENZEICHEN]',
-    FN: '[FN]',
-    EZ: '[EZ]',
-    KENNZEICHEN: '[KENNZEICHEN]',
-    URL: '[URL]',
-    IP: '[IP]',
-  },
+/**
+ * Base name for each type's pseudonym. The anonymizer appends a per-type,
+ * per-document counter (e.g. `Person_1`, `ORG_2`), reusing the same number for
+ * repeated occurrences of the same value. Language-neutral by design.
+ */
+export const PSEUDONYM_BASE: Record<EntityType, string> = {
+  PERSON: 'Person',
+  ORG: 'ORG',
+  ADRESSE: 'Address',
+  EMAIL: 'Email',
+  TELEFON: 'Phone',
+  IBAN: 'IBAN',
+  CREDIT_CARD: 'Card',
+  SVNR: 'SSN',
+  AKTENZEICHEN: 'Case',
+  FN: 'CompanyNo',
+  EZ: 'LandReg',
+  KENNZEICHEN: 'Plate',
+  URL: 'URL',
+  IP: 'IP',
+  DATE: 'Date',
 };

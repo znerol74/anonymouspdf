@@ -1,7 +1,8 @@
 // Deterministic pattern recognizers for AT/DE-focused and general PII.
-// Tuned for an auto-redact flow with no manual review step, so precision is
-// favored over recall: no broad 4+ digit catch-all and no standalone dates,
-// plus Luhn-checked credit cards and IPv4.
+// Tuned for an anonymize flow (entities are replaced with pseudonyms, not
+// hidden): precision is still favored, but dates ARE detected (numeric, ISO,
+// month-name and standalone year) since the product now masks them too.
+// Still no broad 4+ digit catch-all; credit cards are Luhn-checked.
 
 import type { DetectedSpan, EntityType } from '../types';
 
@@ -89,6 +90,23 @@ const CREDIT_CARD_RE = /\b\d{4}(?:[\s-]?\d{4}){2}(?:[\s-]?\d{1,4})?\b/g;
 const IPV4_RE =
   /\b(?:(?:25[0-5]|2[0-4]\d|1?\d?\d)\.){3}(?:25[0-5]|2[0-4]\d|1?\d?\d)\b/g;
 
+const MONTH_NAMES =
+  'January|February|March|April|May|June|July|August|September|October|November|December|' +
+  'Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec|' +
+  'Jänner|Januar|Februar|März|Mai|Juni|Juli|Oktober|Dezember';
+// 31.12.2024 · 31/12/24 · 12-31-2024 (day/month order not enforced)
+const DATE_NUMERIC_RE = /\b(?:0?[1-9]|[12]\d|3[01])[.\/-](?:0?[1-9]|1[0-2])[.\/-]\d{2,4}\b/g;
+// ISO 2024-12-31
+const DATE_ISO_RE = /\b\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])\b/g;
+// 15. März 2024 · 15 March 2024 · March 2024 · March 15, 2024
+const DATE_TEXT_RE = new RegExp(
+  `\\b(?:\\d{1,2}\\.?\\s+)?(?:${MONTH_NAMES})\\.?\\s+\\d{4}\\b|` +
+    `\\b(?:${MONTH_NAMES})\\s+\\d{1,2}(?:st|nd|rd|th)?,?\\s+\\d{4}\\b`,
+  'gi',
+);
+// Standalone calendar year (accepts some false positives by design).
+const DATE_YEAR_RE = /\b(?:19|20)\d{2}\b/g;
+
 // --- Post-filter helpers -------------------------------------------------
 
 function digitsOnly(s: string): string {
@@ -174,6 +192,10 @@ const PATTERNS: PatternDef[] = [
   { type: 'ADRESSE', re: PLZ_ADRESSE_RE, filter: (_m, text, start) => plzInAddressContext(text, start) },
   { type: 'ADRESSE', re: STRASSE_RE },
   { type: 'KENNZEICHEN', re: KENNZEICHEN_RE, filter: (m) => kennzeichenFilter(m) },
+  { type: 'DATE', re: DATE_NUMERIC_RE },
+  { type: 'DATE', re: DATE_ISO_RE },
+  { type: 'DATE', re: DATE_TEXT_RE },
+  { type: 'DATE', re: DATE_YEAR_RE },
 ];
 
 export function runRegexLayer(text: string): DetectedSpan[] {
