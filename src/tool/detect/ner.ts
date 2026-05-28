@@ -56,6 +56,93 @@ function chunk(text: string, max: number): { text: string; offset: number }[] {
   return out;
 }
 
+export interface NerToken {
+  /** Raw per-token tag, e.g. "B-PER" / "I-PER". Present when un-aggregated. */
+  entity?: string;
+  /** Merged group label, e.g. "PER". Present when the pipeline aggregates. */
+  entity_group?: string;
+  word?: string;
+  score?: number;
+  start?: number;
+  end?: number;
+}
+
+// transformers.js (3.x) ignores `aggregation_strategy` and returns raw per-token
+// BIO tags (`entity: "B-PER"/"I-PER"`) with NO character offsets — only `word`.
+// So merge consecutive BIO tokens of one type and recover char offsets by
+// locating each token's surface form in the source text with a forward cursor.
+// Also handles the aggregated shape (`entity_group` + numeric start/end) in case
+// a future version honors the strategy.
+export function aggregateNerTokens(tokens: NerToken[], text: string): DetectedSpan[] {
+  const spans: DetectedSpan[] = [];
+  let cursor = 0;
+
+  let cur: { type: EntityType; scores: number[]; start: number; end: number; placed: boolean } | null = null;
+
+  const flush = () => {
+    if (cur && cur.placed) {
+      const score = cur.scores.length ? Math.min(...cur.scores) : 1;
+      if (score >= SCORE_THRESHOLD) {
+        spans.push({
+          type: cur.type,
+          start: cur.start,
+          end: cur.end,
+          text: text.slice(cur.start, cur.end),
+          source: 'ner',
+          score,
+        });
+      }
+    }
+    cur = null;
+  };
+
+  for (const tok of tokens) {
+    const label = tok.entity ?? tok.entity_group;
+    if (!label || !tok.word) {
+      flush();
+      continue;
+    }
+    const m = /^([BI])-(.+)$/.exec(label);
+    const prefix = m ? m[1] : '';
+    const base = m ? m[2] : label;
+    const type = mapGroup(base);
+    if (!type) {
+      flush();
+      continue;
+    }
+
+    // A "B-" tag, an un-prefixed (already-aggregated) tag, or a type switch
+    // starts a new entity; an "I-" of the same type extends the current one.
+    if (prefix !== 'I' || !cur || cur.type !== type) flush();
+    if (!cur) cur = { type, scores: [], start: -1, end: -1, placed: false };
+
+    let s: number;
+    let e: number;
+    if (typeof tok.start === 'number' && typeof tok.end === 'number') {
+      s = tok.start;
+      e = tok.end;
+    } else {
+      const word = tok.word.replace(/^##/, '');
+      const idx = text.indexOf(word, cursor);
+      if (idx === -1) {
+        if (typeof tok.score === 'number') cur.scores.push(tok.score);
+        continue;
+      }
+      s = idx;
+      e = idx + word.length;
+    }
+    cursor = e;
+    if (!cur.placed) {
+      cur.start = s;
+      cur.placed = true;
+    }
+    cur.end = e;
+    if (typeof tok.score === 'number') cur.scores.push(tok.score);
+  }
+  flush();
+  return spans;
+}
+
 /** Load (and cache) the NER model. Use to surface download progress up front. */
 export async function warmupNer(onProgress?: ProgressCb): Promise<void> {
   await getPipeline(onProgress);
@@ -69,19 +156,8 @@ export async function runNer(text: string, onProgress?: ProgressCb): Promise<Det
   for (const part of chunk(text, MAX_CHARS)) {
     const results = await pipe(part.text, { aggregation_strategy: 'simple' });
     if (!Array.isArray(results)) continue;
-    for (const r of results) {
-      const type = mapGroup(r.entity_group ?? r.entity);
-      if (!type) continue;
-      if (typeof r.score === 'number' && r.score < SCORE_THRESHOLD) continue;
-      if (typeof r.start !== 'number' || typeof r.end !== 'number') continue;
-      out.push({
-        type,
-        start: part.offset + r.start,
-        end: part.offset + r.end,
-        text: part.text.slice(r.start, r.end),
-        source: 'ner',
-        score: r.score,
-      });
+    for (const span of aggregateNerTokens(results as NerToken[], part.text)) {
+      out.push({ ...span, start: span.start + part.offset, end: span.end + part.offset });
     }
   }
   return out;

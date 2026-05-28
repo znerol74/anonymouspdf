@@ -42,6 +42,38 @@ export interface PageText {
   boxes: CharBox[];
 }
 
+let measureCtx: CanvasRenderingContext2D | null = null;
+function getMeasureCtx(): CanvasRenderingContext2D | null {
+  if (measureCtx) return measureCtx;
+  if (typeof document === 'undefined') return null;
+  measureCtx = document.createElement('canvas').getContext('2d');
+  return measureCtx;
+}
+
+// Split a run's known total width across its characters by their real glyph
+// proportions (measured with a sans-serif fallback) rather than a flat average.
+// A flat w/n inflates positions after narrow prefixes (caps/@/digits raise the
+// mean), shifting boxes right and leaving the first glyph of a span exposed.
+// Per UTF-16 code unit so boxes stay aligned 1:1 with the concatenated text.
+function charWidths(str: string, totalWidth: number, fontSize: number): number[] {
+  const n = str.length;
+  if (n === 0) return [];
+  const cw = totalWidth / n;
+  const ctx = getMeasureCtx();
+  if (!ctx || totalWidth <= 0) return new Array(n).fill(cw);
+  ctx.font = `${Math.max(1, fontSize)}px sans-serif`;
+  const rel: number[] = [];
+  let sum = 0;
+  for (let i = 0; i < n; i++) {
+    const w = ctx.measureText(str[i]).width;
+    rel.push(w);
+    sum += w;
+  }
+  if (sum <= 0) return new Array(n).fill(cw);
+  const k = totalWidth / sum;
+  return rel.map((r) => r * k);
+}
+
 export async function loadPdf(data: ArrayBuffer): Promise<PdfDoc> {
   const pdfjs = await import('pdfjs-dist');
   pdfjs.GlobalWorkerOptions.workerSrc = workerUrl;
@@ -70,9 +102,13 @@ export async function extractPages(doc: PdfDoc): Promise<PageText[]> {
       const h = it.height || Math.hypot(tx[1], tx[3]) || 10;
       const w = it.width || 0;
       const n = str.length;
-      const cw = n > 0 ? w / n : 0;
 
-      for (let i = 0; i < n; i++) boxes.push({ x: x + cw * i, y, w: cw, h });
+      const widths = charWidths(str, w, h);
+      let cursor = x;
+      for (let i = 0; i < n; i++) {
+        boxes.push({ x: cursor, y, w: widths[i], h });
+        cursor += widths[i];
+      }
       text += str;
       // Separator between runs keeps word boundaries intact for detection.
       text += it.hasEOL ? '\n' : ' ';
