@@ -28,9 +28,11 @@ jobs:
 
       - run: pnpm --config.verifyDepsBeforeRun=false build
 
+      # Run wrangler via npx (npm) rather than cloudflare/wrangler-action, which
+      # installs wrangler with pnpm and re-triggers the build-script policy
+      # (wrangler pulls in workerd/esbuild). wrangler reads creds from env.
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: 790369fbd60bd3d4d6e34bacbd0c854d
-          command: pages deploy dist --project-name=anonymouspdf --branch=main
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: 790369fbd60bd3d4d6e34bacbd0c854d
+        run: npx -y wrangler@4 pages deploy dist --project-name=anonymouspdf --branch=main
