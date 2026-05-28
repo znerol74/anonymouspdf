@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Landing from '../../components/Landing.astro';
+import { landing, faqLd } from '../../content/landing';
+import { alternatesFor } from '../../i18n/routes';
+
+const copy = landing['dokument-schwaerzen'].de!;
+---
+
+<BaseLayout
+  title={copy.seoTitle}
+  description={copy.seoDescription}
+  alternates={alternatesFor('dokument-schwaerzen')}
+  jsonLd={faqLd(copy.faq)}
+>
+  <Landing copy={copy} lang="de" />
+</BaseLayout>

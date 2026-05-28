@@ -1,0 +1,53 @@
+---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+import RedactionTool from './RedactionTool.tsx';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<section class="bg-gradient-to-b from-brand-50 to-white">
+  <div class="mx-auto max-w-6xl px-4 py-16 text-center sm:py-20">
+    <h1 class="mx-auto max-w-3xl text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
+      {t('hero.title')}
+    </h1>
+    <p class="mx-auto mt-5 max-w-2xl text-lg text-slate-600">{t('hero.subtitle')}</p>
+
+    <RedactionTool client:load lang={lang} />
+  </div>
+</section>
+
+<section class="mx-auto max-w-6xl px-4 py-16">
+  <h2 class="text-center text-2xl font-bold text-slate-900">{t('how.title')}</h2>
+  <div class="mt-10 grid gap-8 sm:grid-cols-3">
+    <div>
+      <h3 class="font-semibold text-slate-900">{t('how.step1.title')}</h3>
+      <p class="mt-2 text-sm text-slate-600">{t('how.step1.body')}</p>
+    </div>
+    <div>
+      <h3 class="font-semibold text-slate-900">{t('how.step2.title')}</h3>
+      <p class="mt-2 text-sm text-slate-600">{t('how.step2.body')}</p>
+    </div>
+    <div>
+      <h3 class="font-semibold text-slate-900">{t('how.step3.title')}</h3>
+      <p class="mt-2 text-sm text-slate-600">{t('how.step3.body')}</p>
+    </div>
+  </div>
+</section>
+
+<section class="bg-slate-50">
+  <div class="mx-auto grid max-w-6xl gap-8 px-4 py-16 sm:grid-cols-3">
+    <div class="rounded-xl border border-slate-200 bg-white p-6">
+      <h3 class="font-semibold text-slate-900">{t('trust.local.title')}</h3>
+      <p class="mt-2 text-sm text-slate-600">{t('trust.local.body')}</p>
+    </div>
+    <div class="rounded-xl border border-slate-200 bg-white p-6">
+      <h3 class="font-semibold text-slate-900">{t('trust.free.title')}</h3>
+      <p class="mt-2 text-sm text-slate-600">{t('trust.free.body')}</p>
+    </div>
+    <div class="rounded-xl border border-slate-200 bg-white p-6">
+      <h3 class="font-semibold text-slate-900">{t('trust.true.title')}</h3>
+      <p class="mt-2 text-sm text-slate-600">{t('trust.true.body')}</p>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,34 @@
+---
+import { getLangFromUrl } from '../i18n/utils';
+import { languages, type Lang } from '../i18n/ui';
+import type { AltLink } from '../i18n/routes';
+
+interface Props {
+  alternates?: AltLink[];
+}
+
+const { alternates = [] } = Astro.props;
+const current = getLangFromUrl(Astro.url);
+
+function urlFor(lang: Lang): string {
+  const alt = alternates.find((a) => a.locale === lang);
+  return alt ? alt.path : `/${lang}/`;
+}
+---
+
+<div class="flex items-center gap-1">
+  {
+    (Object.keys(languages) as Lang[]).map((lang) => (
+      <a
+        href={urlFor(lang)}
+        hreflang={lang}
+        class:list={[
+          'rounded px-2 py-1 text-xs font-semibold uppercase',
+          lang === current ? 'bg-slate-900 text-white' : 'text-slate-500 hover:text-slate-900',
+        ]}
+      >
+        {lang}
+      </a>
+    ))
+  }
+</div>

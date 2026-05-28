@@ -1,0 +1,31 @@
+---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const year = new Date().getFullYear();
+
+const links =
+  lang === 'de'
+    ? [
+        { href: '/de/pdf-schwaerzen/', label: 'PDF schwärzen' },
+        { href: '/de/pdf-anonymisieren/', label: 'PDF anonymisieren' },
+        { href: '/de/dokument-schwaerzen/', label: 'Dokument schwärzen' },
+      ]
+    : [
+        { href: '/en/redact-pdf/', label: 'Redact PDF' },
+        { href: '/en/anonymize-pdf/', label: 'Anonymize PDF' },
+        { href: '/en/redaction-tool/', label: 'Redaction tool' },
+        { href: '/en/data-masking/', label: 'Data masking' },
+      ];
+---
+
+<footer class="border-t border-slate-200 bg-slate-50">
+  <div class="mx-auto max-w-6xl px-4 py-8 text-sm text-slate-500">
+    <nav class="mb-6 flex flex-wrap gap-x-6 gap-y-2">
+      {links.map((l) => <a href={l.href} class="font-medium text-slate-600 hover:text-brand-700">{l.label}</a>)}
+    </nav>
+    <p class="mb-2 font-medium text-slate-700">{t('footer.localnote')}</p>
+    <p>© {year} {t('site.name')}. {t('footer.rights')}</p>
+  </div>
+</footer>
