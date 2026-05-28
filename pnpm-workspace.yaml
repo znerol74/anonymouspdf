@@ -1,0 +1,8 @@
+## None of these postinstall build scripts are needed for this static,
+## browser-only build (sharp / onnxruntime-node aren't used at build time),
+## so they're explicitly declined to keep `pnpm install` from erroring in CI.
+allowBuilds:
+  esbuild: false
+  onnxruntime-node: false
+  protobufjs: false
+  sharp: false
