@@ -1,0 +1,36 @@
+name: Deploy to Cloudflare Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      # --frozen-lockfile pins exact versions, so pnpm 11's minimumReleaseAge
+      # gate (which can reject freshly-published pinned deps) is redundant here.
+      - run: pnpm install --frozen-lockfile --config.minimumReleaseAge=0
+
+      - run: pnpm --config.verifyDepsBeforeRun=false test
+
+      - run: pnpm --config.verifyDepsBeforeRun=false build
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: 790369fbd60bd3d4d6e34bacbd0c854d
+          command: pages deploy dist --project-name=anonymouspdf --branch=main
