@@ -1,13 +1,14 @@
-import { ui, defaultLang, type Lang } from './ui';
+import { LOCALES, defaultLang, type Lang } from './site';
+import { ui, type UiKey } from './ui';
 
 export function getLangFromUrl(url: URL): Lang {
-  const [, lang] = url.pathname.split('/');
-  if (lang === 'en' || lang === 'de') return lang;
-  return defaultLang;
+  const seg = url.pathname.split('/')[1];
+  return (LOCALES as readonly string[]).includes(seg) ? (seg as Lang) : defaultLang;
 }
 
 export function useTranslations(lang: Lang) {
-  return function t(key: keyof (typeof ui)[typeof defaultLang]): string {
-    return ui[lang][key] ?? ui[defaultLang][key];
+  const table = ui[lang] ?? ui[defaultLang]!;
+  return function t(key: UiKey): string {
+    return table[key] ?? ui[defaultLang]![key];
   };
 }

@@ -1,23 +1,21 @@
 ---
 import { getLangFromUrl, useTranslations } from '../i18n/utils';
+import { pages } from '../content/pages';
+import { pathFor } from '../i18n/routes';
+import type { LandingCopy } from '../content/landing/types';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 const year = new Date().getFullYear();
 
-const links =
-  lang === 'de'
-    ? [
-        { href: '/de/pdf-schwaerzen/', label: 'PDF schwärzen' },
-        { href: '/de/pdf-anonymisieren/', label: 'PDF anonymisieren' },
-        { href: '/de/dokument-schwaerzen/', label: 'Dokument schwärzen' },
-      ]
-    : [
-        { href: '/en/redact-pdf/', label: 'Redact PDF' },
-        { href: '/en/anonymize-pdf/', label: 'Anonymize PDF' },
-        { href: '/en/redaction-tool/', label: 'Redaction tool' },
-        { href: '/en/data-masking/', label: 'Data masking' },
-      ];
+// Footer nav, in display order. Each concept appears only in locales that have it.
+const FOOTER_KEYS = ['redact-pdf', 'anonymize-pdf', 'redaction-tool', 'data-masking', 'document-redact'];
+const links = FOOTER_KEYS.map((key) => {
+  const entry = pages[key]?.locales[lang];
+  const href = pathFor(key, lang);
+  if (!entry || !href) return null;
+  return { href, label: (entry.copy as LandingCopy).navLabel };
+}).filter((l): l is { href: string; label: string } => l !== null);
 ---
 
 <footer class="border-t border-slate-200 bg-slate-50">

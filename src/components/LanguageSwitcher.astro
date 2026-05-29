@@ -1,7 +1,7 @@
 ---
 import { getLangFromUrl } from '../i18n/utils';
-import { languages, type Lang } from '../i18n/ui';
-import type { AltLink } from '../i18n/routes';
+import { LIVE_LOCALES, type Lang } from '../i18n/site';
+import { pathFor, type AltLink } from '../i18n/routes';
 
 interface Props {
   alternates?: AltLink[];
@@ -12,13 +12,13 @@ const current = getLangFromUrl(Astro.url);
 
 function urlFor(lang: Lang): string {
   const alt = alternates.find((a) => a.locale === lang);
-  return alt ? alt.path : `/${lang}/`;
+  return alt ? alt.path : (pathFor('home', lang) ?? `/${lang}/`);
 }
 ---
 
 <div class="flex items-center gap-1">
   {
-    (Object.keys(languages) as Lang[]).map((lang) => (
+    LIVE_LOCALES.map((lang) => (
       <a
         href={urlFor(lang)}
         hreflang={lang}

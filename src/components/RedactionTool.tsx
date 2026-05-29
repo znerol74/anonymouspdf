@@ -73,7 +73,7 @@ function Spinner() {
 }
 
 export default function RedactionTool({ lang }: Props) {
-  const t = toolStrings[lang];
+  const t = toolStrings[lang] ?? toolStrings.en!;
   const [phase, setPhase] = useState<Phase>('idle');
   const [progress, setProgress] = useState(0);
   const [dragging, setDragging] = useState(false);

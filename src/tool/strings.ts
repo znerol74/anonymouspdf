@@ -1,6 +1,7 @@
 import type { EntityType } from './types';
+import type { Lang } from '../i18n/site';
 
-export type Lang = 'en' | 'de';
+export type { Lang };
 
 export interface ToolStrings {
   drop: string;
@@ -26,7 +27,7 @@ export interface ToolStrings {
   typeNames: Record<EntityType, string>;
 }
 
-export const toolStrings: Record<Lang, ToolStrings> = {
+export const toolStrings: Partial<Record<Lang, ToolStrings>> = {
   en: {
     drop: 'Drop a PDF here, or click to choose a file',
     choose: 'Choose PDF',

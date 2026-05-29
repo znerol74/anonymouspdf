@@ -1,20 +1,25 @@
-import type { Lang } from './ui';
+import { pages } from '../content/pages';
+import type { Lang } from './site';
 
 export type AltLink = { locale: Lang; path: string };
 
-// Reciprocal hreflang pairs. Slugs differ per language (each is its own keyword),
-// so pages are paired semantically. Only locales with a real equivalent are listed;
-// single-language pages simply have no alternate in the other language.
-export const pageAlternates: Record<string, Partial<Record<Lang, string>>> = {
-  home: { en: '/en/', de: '/de/' },
-  'redact-pdf': { en: '/en/redact-pdf/', de: '/de/pdf-schwaerzen/' },
-  'anonymize-pdf': { en: '/en/anonymize-pdf/', de: '/de/pdf-anonymisieren/' },
-  'redaction-tool': { en: '/en/redaction-tool/' },
-  'data-masking': { en: '/en/data-masking/' },
-  'dokument-schwaerzen': { de: '/de/dokument-schwaerzen/' },
-};
+/** Localized URL path for a concept in a locale, or null if it has no page there. */
+export function pathFor(pageKey: string, lang: Lang): string | null {
+  const entry = pages[pageKey]?.locales[lang];
+  if (!entry) return null;
+  return entry.slug === '' ? `/${lang}/` : `/${lang}/${entry.slug}/`;
+}
 
-export function alternatesFor(key: string): AltLink[] {
-  const map = pageAlternates[key] ?? {};
-  return (Object.entries(map) as [Lang, string][]).map(([locale, path]) => ({ locale, path }));
+/**
+ * Reciprocal hreflang alternates for a concept: one entry per locale that
+ * actually has the page. Slugs differ per language (each is its own keyword),
+ * so pages are paired by their semantic concept key.
+ */
+export function alternatesFor(pageKey: string): AltLink[] {
+  const def = pages[pageKey];
+  if (!def) return [];
+  return (Object.keys(def.locales) as Lang[]).map((locale) => ({
+    locale,
+    path: pathFor(pageKey, locale)!,
+  }));
 }

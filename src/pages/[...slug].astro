@@ -1,0 +1,49 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Landing from '../components/Landing.astro';
+import HomeContent from '../components/HomeContent.astro';
+import { LIVE_LOCALES } from '../i18n/site';
+import { pages } from '../content/pages';
+import { alternatesFor } from '../i18n/routes';
+import { faqLd, webAppLd, type HomeMeta, type LandingCopy } from '../content/landing/types';
+
+export const getStaticPaths = (() => {
+  const out = [];
+  for (const [pageKey, page] of Object.entries(pages)) {
+    for (const locale of LIVE_LOCALES) {
+      const entry = page.locales[locale];
+      if (!entry) continue;
+      const slug = entry.slug === '' ? locale : `${locale}/${entry.slug}`;
+      out.push({
+        params: { slug },
+        props: { pageKey, lang: locale, kind: page.kind, copy: entry.copy },
+      });
+    }
+  }
+  return out;
+}) satisfies GetStaticPaths;
+
+const { pageKey, lang, kind, copy } = Astro.props;
+const site = Astro.site ?? new URL('https://anonymouspdf.com');
+const alternates = alternatesFor(pageKey);
+
+let title: string;
+let description: string;
+let jsonLd: unknown;
+if (kind === 'home') {
+  const meta = copy as HomeMeta;
+  title = meta.seoTitle;
+  description = meta.seoDescription;
+  jsonLd = webAppLd(new URL(`/${lang}/`, site).href, description, meta.priceCurrency);
+} else {
+  const c = copy as LandingCopy;
+  title = c.seoTitle;
+  description = c.seoDescription;
+  jsonLd = faqLd(c.faq);
+}
+---
+
+<BaseLayout title={title} description={description} alternates={alternates} jsonLd={jsonLd} lang={lang}>
+  {kind === 'home' ? <HomeContent /> : <Landing copy={copy as LandingCopy} lang={lang} />}
+</BaseLayout>

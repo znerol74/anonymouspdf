@@ -3,6 +3,7 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { getLangFromUrl } from '../i18n/utils';
+import { LOCALE_META, ogLocale, isRtl, defaultLang, type Lang } from '../i18n/site';
 import type { AltLink } from '../i18n/routes';
 
 interface Props {
@@ -12,6 +13,7 @@ interface Props {
   ogImage?: string;
   jsonLd?: unknown;
   noindex?: boolean;
+  lang?: Lang;
 }
 
 const {
@@ -21,17 +23,18 @@ const {
   ogImage = '/og/default.png',
   jsonLd,
   noindex = false,
+  lang: langProp,
 } = Astro.props;
 
-const lang = getLangFromUrl(Astro.url);
+const lang = langProp ?? getLangFromUrl(Astro.url);
 const site = Astro.site ?? new URL('https://anonymouspdf.com');
 const canonical = new URL(Astro.url.pathname, site).href;
 const ogImageUrl = new URL(ogImage, site).href;
-const xDefault = alternates.find((a) => a.locale === 'en');
+const xDefault = alternates.find((a) => a.locale === defaultLang) ?? alternates[0];
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang={LOCALE_META[lang].htmlLang} dir={isRtl(lang) ? 'rtl' : undefined}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -65,7 +68,7 @@ const xDefault = alternates.find((a) => a.locale === 'en');
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImageUrl} />
-    <meta property="og:locale" content={lang === 'de' ? 'de_DE' : 'en_US'} />
+    <meta property="og:locale" content={ogLocale(lang)} />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />

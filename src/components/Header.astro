@@ -1,7 +1,7 @@
 ---
 import { getLangFromUrl, useTranslations } from '../i18n/utils';
 import LanguageSwitcher from './LanguageSwitcher.astro';
-import type { AltLink } from '../i18n/routes';
+import { pathFor, type AltLink } from '../i18n/routes';
 
 interface Props {
   alternates?: AltLink[];
@@ -11,9 +11,9 @@ const { alternates = [] } = Astro.props;
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
-const home = `/${lang}/`;
-const redact = lang === 'de' ? '/de/pdf-schwaerzen/' : '/en/redact-pdf/';
-const anonymize = lang === 'de' ? '/de/pdf-anonymisieren/' : '/en/anonymize-pdf/';
+const home = pathFor('home', lang) ?? `/${lang}/`;
+const redact = pathFor('redact-pdf', lang);
+const anonymize = pathFor('anonymize-pdf', lang);
 ---
 
 <header class="border-b border-slate-200 bg-white">
@@ -23,8 +23,8 @@ const anonymize = lang === 'de' ? '/de/pdf-anonymisieren/' : '/en/anonymize-pdf/
       <span>{t('site.name')}</span>
     </a>
     <div class="flex items-center gap-5 text-sm font-medium text-slate-600">
-      <a href={redact} class="hidden hover:text-brand-700 sm:inline">{t('nav.redact')}</a>
-      <a href={anonymize} class="hidden hover:text-brand-700 sm:inline">{t('nav.anonymize')}</a>
+      {redact && <a href={redact} class="hidden hover:text-brand-700 sm:inline">{t('nav.redact')}</a>}
+      {anonymize && <a href={anonymize} class="hidden hover:text-brand-700 sm:inline">{t('nav.anonymize')}</a>}
       <LanguageSwitcher alternates={alternates} />
     </div>
   </nav>
