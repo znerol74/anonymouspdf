@@ -19,103 +19,37 @@ export interface PageDef {
   locales: Partial<Record<Lang, PageLocaleEntry>>;
 }
 
-// The page registry. Keys are stable semantic concept ids; per-locale `slug` is
-// the localized keyword. Existing en/de slugs are preserved exactly so already
-// indexed URLs don't change. Add a locale to a concept = one entry here.
-export const pages: Record<string, PageDef> = {
-  home: {
-    kind: 'home',
-    locales: {
-      en: { slug: '', copy: homeMeta.en! },
-      de: { slug: '', copy: homeMeta.de! },
-      es: { slug: '', copy: homeMeta.es! },
-    },
-  },
-  'redact-pdf': {
-    kind: 'landing',
-    locales: {
-      en: { slug: 'redact-pdf', copy: en['redact-pdf'] },
-      de: { slug: 'pdf-schwaerzen', copy: de['redact-pdf'] },
-      es: { slug: 'tachar-pdf', copy: es['redact-pdf'] },
-    },
-  },
-  'anonymize-pdf': {
-    kind: 'landing',
-    locales: {
-      en: { slug: 'anonymize-pdf', copy: en['anonymize-pdf'] },
-      de: { slug: 'pdf-anonymisieren', copy: de['anonymize-pdf'] },
-      es: { slug: 'anonimizar-pdf', copy: es['anonymize-pdf'] },
-    },
-  },
-  'redaction-tool': {
-    kind: 'landing',
-    locales: {
-      en: { slug: 'redaction-tool', copy: en['redaction-tool'] },
-      es: { slug: 'herramienta-tachar-pdf', copy: es['redaction-tool'] },
-    },
-  },
-  'data-masking': {
-    kind: 'landing',
-    locales: {
-      en: { slug: 'data-masking', copy: en['data-masking'] },
-      es: { slug: 'enmascarar-datos-pdf', copy: es['data-masking'] },
-    },
-  },
-  'pseudonymize-pdf': {
-    kind: 'landing',
-    locales: {
-      en: { slug: 'pseudonymize-pdf', copy: en['pseudonymize-pdf'] },
-      es: { slug: 'seudonimizar-pdf', copy: es['pseudonymize-pdf'] },
-    },
-  },
-  'gdpr-pdf': {
-    kind: 'landing',
-    locales: {
-      en: { slug: 'gdpr-pdf', copy: en['gdpr-pdf'] },
-      es: { slug: 'rgpd-pdf', copy: es['gdpr-pdf'] },
-    },
-  },
-  'remove-names-from-pdf': {
-    kind: 'landing',
-    locales: {
-      en: { slug: 'remove-names-from-pdf', copy: en['remove-names-from-pdf'] },
-      es: { slug: 'eliminar-nombres-pdf', copy: es['remove-names-from-pdf'] },
-    },
-  },
-  'censor-pdf': {
-    kind: 'landing',
-    locales: {
-      en: { slug: 'censor-pdf', copy: en['censor-pdf'] },
-      es: { slug: 'censurar-pdf', copy: es['censor-pdf'] },
-    },
-  },
-  'black-out-pdf': {
-    kind: 'landing',
-    locales: {
-      en: { slug: 'black-out-pdf', copy: en['black-out-pdf'] },
-      es: { slug: 'ennegrecer-pdf', copy: es['black-out-pdf'] },
-    },
-  },
-  'hide-information-in-pdf': {
-    kind: 'landing',
-    locales: {
-      en: { slug: 'hide-information-in-pdf', copy: en['hide-information-in-pdf'] },
-      es: { slug: 'ocultar-informacion-pdf', copy: es['hide-information-in-pdf'] },
-    },
-  },
-  'remove-personal-information-pdf': {
-    kind: 'landing',
-    locales: {
-      en: { slug: 'remove-personal-information-pdf', copy: en['remove-personal-information-pdf'] },
-      es: { slug: 'eliminar-datos-personales-pdf', copy: es['remove-personal-information-pdf'] },
-    },
-  },
-  'document-redact': {
-    kind: 'landing',
-    locales: {
-      en: { slug: 'redact-document', copy: en['document-redact'] },
-      de: { slug: 'dokument-schwaerzen', copy: de['document-redact'] },
-      es: { slug: 'censurar-documento', copy: es['document-redact'] },
-    },
-  },
+// Per-locale copy modules. Add a new language = create landing/<lang>.ts, import
+// it here, add its slugs to SLUGS, and add it to LIVE_LOCALES in site.ts.
+const COPY: Partial<Record<Lang, Record<string, LandingCopy>>> = { en, de, es };
+
+// Central slug table: concept id → localized URL slug per locale. Existing en/de
+// slugs are preserved exactly. A locale generates a page for a concept only when
+// it has BOTH a slug here and authored copy in COPY (or homeMeta for 'home').
+const SLUGS: Record<string, Partial<Record<Lang, string>>> = {
+  home: { en: '', de: '', es: '', fr: '', it: '', pt: '', nl: '', ar: '', lv: '', zh: '' },
+  'redact-pdf': { en: 'redact-pdf', de: 'pdf-schwaerzen', es: 'tachar-pdf', fr: 'caviarder-pdf', it: 'oscurare-pdf', pt: 'ocultar-pdf', nl: 'pdf-zwartlakken', ar: 'redact-pdf', lv: 'aizkrasot-pdf', zh: 'redact-pdf' },
+  'anonymize-pdf': { en: 'anonymize-pdf', de: 'pdf-anonymisieren', es: 'anonimizar-pdf', fr: 'anonymiser-pdf', it: 'anonimizzare-pdf', pt: 'anonimizar-pdf', nl: 'pdf-anonimiseren', ar: 'anonymize-pdf', lv: 'anonimizet-pdf', zh: 'anonymize-pdf' },
+  'redaction-tool': { en: 'redaction-tool', de: 'schwaerzungstool', es: 'herramienta-tachar-pdf', fr: 'outil-caviardage', it: 'strumento-oscuramento', pt: 'ferramenta-ocultar', nl: 'redactie-tool', ar: 'redaction-tool', lv: 'aizkrasosanas-riks', zh: 'redaction-tool' },
+  'data-masking': { en: 'data-masking', de: 'daten-maskieren', es: 'enmascarar-datos-pdf', fr: 'masquage-de-donnees', it: 'mascheramento-dati', pt: 'mascaramento-de-dados', nl: 'data-maskeren', ar: 'data-masking', lv: 'datu-maskesana', zh: 'data-masking' },
+  'pseudonymize-pdf': { en: 'pseudonymize-pdf', de: 'pdf-pseudonymisieren', es: 'seudonimizar-pdf', fr: 'pseudonymiser-pdf', it: 'pseudonimizzare-pdf', pt: 'pseudonimizar-pdf', nl: 'pdf-pseudonimiseren', ar: 'pseudonymize-pdf', lv: 'pseidonimizet-pdf', zh: 'pseudonymize-pdf' },
+  'gdpr-pdf': { en: 'gdpr-pdf', de: 'dsgvo-pdf', es: 'rgpd-pdf', fr: 'rgpd-pdf', it: 'gdpr-pdf', pt: 'rgpd-pdf', nl: 'avg-pdf', ar: 'gdpr-pdf', lv: 'vdar-pdf', zh: 'gdpr-pdf' },
+  'remove-names-from-pdf': { en: 'remove-names-from-pdf', de: 'namen-aus-pdf-entfernen', es: 'eliminar-nombres-pdf', fr: 'supprimer-noms-pdf', it: 'rimuovere-nomi-pdf', pt: 'remover-nomes-pdf', nl: 'namen-verwijderen-pdf', ar: 'remove-names-from-pdf', lv: 'nonemt-vardus-pdf', zh: 'remove-names-from-pdf' },
+  'censor-pdf': { en: 'censor-pdf', de: 'pdf-zensieren', es: 'censurar-pdf', fr: 'censurer-pdf', it: 'censurare-pdf', pt: 'censurar-pdf', nl: 'pdf-censureren', ar: 'censor-pdf', lv: 'cenzet-pdf', zh: 'censor-pdf' },
+  'black-out-pdf': { en: 'black-out-pdf', de: 'text-schwaerzen', es: 'ennegrecer-pdf', fr: 'noircir-pdf', it: 'annerire-pdf', pt: 'escurecer-pdf', nl: 'tekst-zwart-maken', ar: 'black-out-pdf', lv: 'aizmelnot-pdf', zh: 'black-out-pdf' },
+  'hide-information-in-pdf': { en: 'hide-information-in-pdf', de: 'informationen-im-pdf-verbergen', es: 'ocultar-informacion-pdf', fr: 'masquer-informations-pdf', it: 'nascondere-informazioni-pdf', pt: 'ocultar-informacoes-pdf', nl: 'informatie-verbergen-pdf', ar: 'hide-information-in-pdf', lv: 'slept-informaciju-pdf', zh: 'hide-information-in-pdf' },
+  'remove-personal-information-pdf': { en: 'remove-personal-information-pdf', de: 'persoenliche-daten-entfernen', es: 'eliminar-datos-personales-pdf', fr: 'supprimer-donnees-personnelles-pdf', it: 'rimuovere-dati-personali-pdf', pt: 'remover-dados-pessoais-pdf', nl: 'persoonsgegevens-verwijderen-pdf', ar: 'remove-personal-information-pdf', lv: 'nonemt-personas-datus-pdf', zh: 'remove-personal-information-pdf' },
+  'document-redact': { en: 'redact-document', de: 'dokument-schwaerzen', es: 'censurar-documento', fr: 'caviarder-document', it: 'oscurare-documento', pt: 'ocultar-documento', nl: 'document-redigeren', ar: 'redact-document', lv: 'aizkrasot-dokumentu', zh: 'redact-document' },
 };
+
+export const pages: Record<string, PageDef> = Object.fromEntries(
+  Object.entries(SLUGS).map(([key, slugs]) => {
+    const kind: PageKind = key === 'home' ? 'home' : 'landing';
+    const locales: PageDef['locales'] = {};
+    for (const lang of Object.keys(slugs) as Lang[]) {
+      const copy = kind === 'home' ? homeMeta[lang] : COPY[lang]?.[key];
+      if (copy !== undefined) locales[lang] = { slug: slugs[lang]!, copy };
+    }
+    return [key, { kind, locales }];
+  }),
+);
