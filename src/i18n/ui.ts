@@ -111,7 +111,88 @@ const fr: Record<UiKey, string> = {
   'footer.localnote': 'Tout le traitement se fait localement dans votre navigateur. Les fichiers ne quittent jamais votre appareil.',
 };
 
+const it: Record<UiKey, string> = {
+  'site.name': 'AnonymousPDF',
+  'site.tagline': 'Oscura e anonimizza i PDF nel tuo browser',
+  'nav.redact': 'Oscurare PDF',
+  'nav.anonymize': 'Anonimizzare PDF',
+  'cta.start': 'Oscura un PDF',
+  'hero.title': 'Oscura e anonimizza i PDF — direttamente nel tuo browser',
+  'hero.subtitle':
+    'Trascina un PDF e AnonymousPDF trova e rimuove automaticamente e-mail, telefoni, numeri di conto, identificativi e nomi. Niente viene caricato: ogni file è elaborato sul tuo dispositivo.',
+  'how.title': 'Come funziona',
+  'how.step1.title': '1. Trascina il tuo PDF',
+  'how.step1.body': 'Seleziona o trascina un PDF nella pagina. Si apre localmente — non viene mai inviato a un server.',
+  'how.step2.title': '2. Rileviamo i dati sensibili',
+  'how.step2.body': 'Pattern (e-mail, telefoni, IBAN, identificativi) e un modello di IA sul dispositivo per nomi e organizzazioni.',
+  'how.step3.title': '3. Scarica il file oscurato',
+  'how.step3.body': 'Visualizza l’anteprima, poi scarica un PDF con il testo davvero rimosso, o copia il testo pulito.',
+  'trust.local.title': '100% nel tuo browser',
+  'trust.local.body': 'I file sono elaborati sul tuo dispositivo e non vengono mai caricati su alcun server.',
+  'trust.free.title': 'Gratis, senza registrazione',
+  'trust.free.body': 'Nessun account, nessuna e-mail, nessuna filigrana. Apri e vai.',
+  'trust.true.title': 'Vero oscuramento',
+  'trust.true.body': 'Il testo sottostante viene rimosso, non solo nascosto dietro un riquadro nero.',
+  'tool.placeholder': 'Qui si carica lo strumento di oscuramento PDF.',
+  'footer.rights': 'Tutti i diritti riservati.',
+  'footer.localnote': 'Tutta l’elaborazione avviene localmente nel tuo browser. I file non lasciano mai il tuo dispositivo.',
+};
+
+const pt: Record<UiKey, string> = {
+  'site.name': 'AnonymousPDF',
+  'site.tagline': 'Oculte e anonimize PDF no seu navegador',
+  'nav.redact': 'Ocultar PDF',
+  'nav.anonymize': 'Anonimizar PDF',
+  'cta.start': 'Ocultar um PDF',
+  'hero.title': 'Oculte e anonimize PDF — diretamente no seu navegador',
+  'hero.subtitle':
+    'Arraste um PDF e o AnonymousPDF encontra e remove automaticamente e-mails, telefones, números de conta, identificadores e nomes. Nada é carregado: cada ficheiro é processado no seu dispositivo.',
+  'how.title': 'Como funciona',
+  'how.step1.title': '1. Arraste o seu PDF',
+  'how.step1.body': 'Selecione ou arraste um PDF para a página. Abre localmente — nunca é enviado para um servidor.',
+  'how.step2.title': '2. Detetamos os dados sensíveis',
+  'how.step2.body': 'Padrões (e-mails, telefones, IBAN, identificadores) e um modelo de IA no dispositivo para nomes e organizações.',
+  'how.step3.title': '3. Descarregue o ficheiro ocultado',
+  'how.step3.body': 'Pré-visualize o resultado e descarregue um PDF com o texto realmente removido, ou copie o texto limpo.',
+  'trust.local.title': '100% no seu navegador',
+  'trust.local.body': 'Os ficheiros são processados no seu dispositivo e nunca são carregados para nenhum servidor.',
+  'trust.free.title': 'Grátis, sem registo',
+  'trust.free.body': 'Sem conta, sem e-mail, sem marca de água. Basta abrir e usar.',
+  'trust.true.title': 'Ocultação real',
+  'trust.true.body': 'O texto subjacente é removido, não apenas escondido atrás de uma caixa preta.',
+  'tool.placeholder': 'A ferramenta de ocultação de PDF carrega aqui.',
+  'footer.rights': 'Todos os direitos reservados.',
+  'footer.localnote': 'Todo o processamento acontece localmente no seu navegador. Os ficheiros nunca saem do seu dispositivo.',
+};
+
+const nl: Record<UiKey, string> = {
+  'site.name': 'AnonymousPDF',
+  'site.tagline': 'PDF’s zwartlakken en anonimiseren in je browser',
+  'nav.redact': 'PDF zwartlakken',
+  'nav.anonymize': 'PDF anonimiseren',
+  'cta.start': 'PDF zwartlakken',
+  'hero.title': 'PDF’s zwartlakken en anonimiseren — direct in je browser',
+  'hero.subtitle':
+    'Sleep een PDF en AnonymousPDF vindt en verwijdert automatisch e-mails, telefoons, rekeningnummers, identificatienummers en namen. Niets wordt geüpload: elk bestand wordt op je eigen apparaat verwerkt.',
+  'how.title': 'Hoe het werkt',
+  'how.step1.title': '1. Sleep je PDF',
+  'how.step1.body': 'Selecteer of sleep een PDF naar de pagina. Het opent lokaal — het wordt nooit naar een server gestuurd.',
+  'how.step2.title': '2. We detecteren de gevoelige gegevens',
+  'how.step2.body': 'Patronen (e-mails, telefoons, IBANs, identificatienummers) en een AI-model op het apparaat voor namen en organisaties.',
+  'how.step3.title': '3. Download het geredigeerde bestand',
+  'how.step3.body': 'Bekijk het resultaat en download een PDF waarin de tekst echt verwijderd is, of kopieer de schone tekst.',
+  'trust.local.title': '100% in je browser',
+  'trust.local.body': 'Bestanden worden op je apparaat verwerkt en nooit naar een server geüpload.',
+  'trust.free.title': 'Gratis, zonder registratie',
+  'trust.free.body': 'Geen account, geen e-mail, geen watermerk. Gewoon openen en gaan.',
+  'trust.true.title': 'Echt zwartlakken',
+  'trust.true.body': 'De onderliggende tekst wordt verwijderd, niet alleen verborgen achter een zwart vlak.',
+  'tool.placeholder': 'De PDF-redactietool laadt hier.',
+  'footer.rights': 'Alle rechten voorbehouden.',
+  'footer.localnote': 'Alle verwerking gebeurt lokaal in je browser. Bestanden verlaten nooit je apparaat.',
+};
+
 export type UiKey = keyof typeof en;
 
 /** Per-locale UI strings. Partial: a missing locale falls back to `defaultLang`. */
-export const ui: Partial<Record<Lang, Record<UiKey, string>>> = { en, de, es, fr };
+export const ui: Partial<Record<Lang, Record<UiKey, string>>> = { en, de, es, fr, it, pt, nl };

@@ -4,6 +4,9 @@ import { en } from './landing/en';
 import { de } from './landing/de';
 import { es } from './landing/es';
 import { fr } from './landing/fr';
+import { it } from './landing/it';
+import { pt } from './landing/pt';
+import { nl } from './landing/nl';
 import { homeMeta } from './home';
 
 export type PageKind = 'home' | 'landing';
@@ -22,7 +25,7 @@ export interface PageDef {
 
 // Per-locale copy modules. Add a new language = create landing/<lang>.ts, import
 // it here, add its slugs to SLUGS, and add it to LIVE_LOCALES in site.ts.
-const COPY: Partial<Record<Lang, Record<string, LandingCopy>>> = { en, de, es, fr };
+const COPY: Partial<Record<Lang, Record<string, LandingCopy>>> = { en, de, es, fr, it, pt, nl };
 
 // Central slug table: concept id → localized URL slug per locale. Existing en/de
 // slugs are preserved exactly. A locale generates a page for a concept only when
