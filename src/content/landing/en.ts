@@ -90,4 +90,172 @@ export const en: Record<string, LandingCopy> = {
       { q: 'Is it free for business use?', a: 'Yes, it is free to use. For sensitive workflows, always review the output before sharing.' },
     ],
   },
+
+  'pseudonymize-pdf': {
+    navLabel: 'Pseudonymize PDF',
+    seoTitle: 'Pseudonymize PDF — Replace Names with Person_1, ORG_1 | AnonymousPDF',
+    seoDescription:
+      'Pseudonymize a PDF for free: automatically replace names, organisations and other personal data with consistent placeholders like Person_1 and ORG_1 — 100% in your browser, nothing uploaded.',
+    h1: 'Pseudonymize PDF documents automatically',
+    sub: 'Replace personal data with consistent placeholders — the same name always becomes the same Person_1 — without uploading your file.',
+    intro: [
+      'Pseudonymisation keeps a document readable while breaking the link to real people: instead of deleting a name, it is replaced with a neutral, consistent label such as Person_1 or ORG_1. The same value always maps to the same placeholder, so the text still makes sense — you just can no longer tell who it refers to.',
+      'AnonymousPDF detects names, organisations, emails, phone numbers, IBANs, IDs and dates, then rebuilds the PDF with each value swapped for its placeholder. The originals are removed from the file, not hidden, and everything happens in your browser — the source data never leaves your device.',
+    ],
+    steps: STEPS,
+    faqHeading: 'Frequently asked questions',
+    faq: [
+      { q: 'How is pseudonymisation different from redaction?', a: 'Redaction blacks information out; pseudonymisation replaces it with a consistent placeholder (Person_1, ORG_1, Date_1) so the document stays readable while the real identities are gone.' },
+      { q: 'Are the same names replaced consistently?', a: 'Yes. Every occurrence of the same value gets the same number, so relationships in the text are preserved while the identity is removed.' },
+      { q: 'Can the original values be recovered?', a: 'No. The PDF is rebuilt from the replaced content, so the original names and numbers are no longer in the file.' },
+      { q: 'Is it free and private?', a: 'Yes — free, no sign-up, and 100% in your browser. Nothing is uploaded.' },
+    ],
+  },
+
+  'gdpr-pdf': {
+    navLabel: 'GDPR PDF',
+    seoTitle: 'GDPR PDF Anonymization — Remove Personal Data Free | AnonymousPDF',
+    seoDescription:
+      'Anonymize PDFs for GDPR: detect and remove personal data — names, contact details, IBANs, IDs — automatically and 100% in your browser. A practical data-minimisation step. No upload.',
+    h1: 'GDPR-friendly PDF anonymization',
+    sub: 'Remove personal data from PDFs to support GDPR data minimisation — automatically, and without sending anything to a server.',
+    intro: [
+      'The GDPR asks you to process only the personal data you actually need and to keep it protected. Before sharing, archiving or publishing a PDF, removing names, contact details and identifiers is a simple, effective data-minimisation step. AnonymousPDF finds that data automatically and takes it out of the file.',
+      'Because detection and removal run entirely in your browser, the personal data is never transmitted to a third party — which matters when the document itself is the thing you are trying to protect. Automatic detection is a strong first pass, not legal advice; always review the result for your specific obligations.',
+    ],
+    steps: STEPS,
+    faqHeading: 'Frequently asked questions',
+    faq: [
+      { q: 'Does this make my document GDPR-compliant?', a: 'It helps with data minimisation by removing personal data, but compliance depends on your full process. Treat it as a practical tool, not legal advice, and review the output.' },
+      { q: 'Is any data sent to a server?', a: 'No. Everything runs locally in your browser, so the personal data never leaves your device.' },
+      { q: 'What personal data does it detect?', a: 'Names and organisations, emails, phone numbers, IBANs and card numbers, IP addresses, ID and case numbers, and dates.' },
+      { q: 'Can I keep the document readable?', a: 'Yes — values are replaced with neutral placeholders (e.g. Person_1), so the text still reads naturally without identifying anyone.' },
+    ],
+  },
+
+  'remove-names-from-pdf': {
+    navLabel: 'Remove names',
+    seoTitle: 'Remove Names from PDF — Free & Automatic | AnonymousPDF',
+    seoDescription:
+      'Remove names from a PDF automatically. An on-device AI model detects person and organisation names and takes them out — free, 100% in your browser, nothing uploaded.',
+    h1: 'Remove names from a PDF',
+    sub: 'Automatically detect and remove people’s and organisations’ names from a PDF — without uploading the file.',
+    intro: [
+      'Names are often the most sensitive part of a document, and the hardest to catch with a simple search-and-replace. AnonymousPDF uses an AI model running in your browser to recognise person and organisation names — even ones you would not think to search for — and removes them from the file.',
+      'Alongside names it also detects emails, phone numbers, IBANs, IDs and dates. Each name is replaced with a neutral placeholder such as Person_1, so the document stays readable while no longer identifying anyone. Everything runs on your device.',
+    ],
+    steps: STEPS,
+    faqHeading: 'Frequently asked questions',
+    faq: [
+      { q: 'How are names detected?', a: 'A multilingual AI model (NER) runs in your browser and flags person and organisation names, in addition to pattern-based data like emails and IBANs.' },
+      { q: 'Does it work for names in other languages?', a: 'Yes — the model supports several major languages. Detection is very good but not perfect, so review the result.' },
+      { q: 'Are the names really gone?', a: 'Yes. The PDF is rebuilt with each name replaced, so the original is no longer in the file.' },
+      { q: 'Is it free?', a: 'Yes, free and with no sign-up, processed entirely in your browser.' },
+    ],
+  },
+
+  'censor-pdf': {
+    navLabel: 'Censor PDF',
+    seoTitle: 'Censor PDF Online — Hide Sensitive Text Free | AnonymousPDF',
+    seoDescription:
+      'Censor a PDF for free: automatically find and remove sensitive text — names, emails, numbers — and rebuild the file so it cannot be recovered. 100% in your browser, no upload.',
+    h1: 'Censor a PDF online',
+    sub: 'Find and remove the sensitive parts of a PDF automatically, then download a file where the censored content is truly gone.',
+    intro: [
+      'Censoring a PDF should mean the hidden text is actually unreadable — not just covered by a box you can copy underneath. AnonymousPDF removes the sensitive content from the file entirely and rebuilds the page, so censored information cannot be selected, searched or recovered.',
+      'It automatically detects what to censor — names, organisations, emails, phone numbers, IBANs, IDs and dates — and replaces each with a neutral placeholder. All of it happens in your browser; the original document never leaves your device.',
+    ],
+    steps: STEPS,
+    faqHeading: 'Frequently asked questions',
+    faq: [
+      { q: 'Is the censored text recoverable?', a: 'No. The page is rebuilt, so the original text is removed from the file rather than hidden behind a box.' },
+      { q: 'What gets censored automatically?', a: 'Names and organisations, emails, phone numbers, IBANs and cards, IP addresses, ID and case numbers, and dates.' },
+      { q: 'Do I have to upload my file?', a: 'No — everything is processed locally in your browser.' },
+      { q: 'Is it free?', a: 'Yes, free with no account and no page limit.' },
+    ],
+  },
+
+  'black-out-pdf': {
+    navLabel: 'Black out PDF',
+    seoTitle: 'Black Out Text in a PDF — Free & Permanent | AnonymousPDF',
+    seoDescription:
+      'Black out text in a PDF for free. Automatically detect sensitive information and remove it permanently from the file — 100% in your browser, nothing uploaded.',
+    h1: 'Black out text in a PDF',
+    sub: 'Permanently remove the sensitive text from a PDF — not just cover it — automatically and in your browser.',
+    intro: [
+      'Drawing a black rectangle over text in most editors leaves the words intact underneath, where they can still be copied or searched. AnonymousPDF blacks out information the safe way: it removes the underlying text from the file and rebuilds the page, so it is genuinely gone.',
+      'You do not have to mark anything by hand — the tool detects sensitive data automatically (names, emails, phone numbers, IBANs, IDs, dates and more) and removes it. It runs entirely on your device, so confidential files stay private.',
+    ],
+    steps: STEPS,
+    faqHeading: 'Frequently asked questions',
+    faq: [
+      { q: 'Does the text stay under the black box?', a: 'No. Unlike a drawn rectangle, this removes the text from the file, so nothing can be copied or recovered.' },
+      { q: 'Can I choose what to black out?', a: 'The tool detects sensitive data automatically; always review the result before sharing.' },
+      { q: 'Is anything uploaded?', a: 'No, it is processed locally in your browser.' },
+      { q: 'How much does it cost?', a: 'Nothing — it is free, with no sign-up.' },
+    ],
+  },
+
+  'hide-information-in-pdf': {
+    navLabel: 'Hide information',
+    seoTitle: 'Hide Information in a PDF — Free & Automatic | AnonymousPDF',
+    seoDescription:
+      'Hide sensitive information in a PDF automatically and for free. Detect and remove names, contact details, account and ID numbers — 100% in your browser, nothing uploaded.',
+    h1: 'Hide information in a PDF',
+    sub: 'Automatically find and remove the information you do not want to share from a PDF — without uploading the file.',
+    intro: [
+      'Sometimes you need to share a document but keep parts of it private — a name, an address, an account number. AnonymousPDF finds that information automatically and removes it from the file, so what is left is safe to send.',
+      'It recognises contact details, financial and ID numbers, IP addresses, dates and — via an on-device AI model — names, organisations and locations. Hidden values are replaced with neutral placeholders, and because everything runs in your browser, the original information is never transmitted.',
+    ],
+    steps: STEPS,
+    faqHeading: 'Frequently asked questions',
+    faq: [
+      { q: 'Is the hidden information removed or just covered?', a: 'Removed. The PDF is rebuilt without the original text, so it cannot be recovered.' },
+      { q: 'What can it hide?', a: 'Names, organisations, emails, phone numbers, IBANs and cards, IP addresses, ID and case numbers, and dates.' },
+      { q: 'Does my file get uploaded?', a: 'No — processing is entirely local to your browser.' },
+      { q: 'Is it really free?', a: 'Yes, free and no sign-up.' },
+    ],
+  },
+
+  'remove-personal-information-pdf': {
+    navLabel: 'Remove personal info',
+    seoTitle: 'Remove Personal Information from a PDF — Free | AnonymousPDF',
+    seoDescription:
+      'Remove personal information from a PDF automatically: names, contact details, IBANs, IDs and more. Free, 100% in your browser, nothing uploaded.',
+    h1: 'Remove personal information from a PDF',
+    sub: 'Strip personal information out of a PDF automatically — names, contact details, account and ID numbers — without sending anything to a server.',
+    intro: [
+      'Personal information hides in more places than you expect: signatures, headers, references, contact blocks. AnonymousPDF scans the whole document and removes the personal details automatically, so you can reuse or share it safely.',
+      'Detection pairs precise pattern matching (emails, phone numbers, IBANs, card and ID numbers, IP addresses, dates) with an on-device AI model for names, organisations and places. Each value is replaced with a neutral placeholder, and the file is processed entirely on your device.',
+    ],
+    steps: STEPS,
+    faqHeading: 'Frequently asked questions',
+    faq: [
+      { q: 'What counts as personal information here?', a: 'Names and organisations, contact details, financial identifiers (IBANs, cards), IP addresses, ID and reference numbers, and dates.' },
+      { q: 'Is the original information sent anywhere?', a: 'No. Detection and removal run locally in your browser.' },
+      { q: 'Can I get the cleaned text too?', a: 'Yes — use Copy text or Download text to get the anonymised text with placeholders.' },
+      { q: 'Will it catch everything?', a: 'It is a strong automatic pass but not perfect; review the result before sharing, especially unusual formats.' },
+    ],
+  },
+
+  'document-redact': {
+    navLabel: 'Redact document',
+    seoTitle: 'Redact a Document Online — Free & Secure | AnonymousPDF',
+    seoDescription:
+      'Redact a document online for free. Automatically detect and permanently remove sensitive data from PDFs — contracts, letters, statements — 100% in your browser, no upload.',
+    h1: 'Redact a document — online and secure',
+    sub: 'Automatically detect and permanently remove sensitive parts of your PDF documents — without uploading anything.',
+    intro: [
+      'Whether it is a contract, a letter, an invoice or an official notice, sensitive details often need to be removed before you pass it on. AnonymousPDF detects that data automatically and removes it from the document for good — not just visually with a box, but from the file itself.',
+      'It recognises emails, phone numbers, IBANs and card numbers, IP addresses, ID and case numbers, and — via an on-device AI model — names, organisations and locations. Processing happens entirely on your device, so confidential documents never leave your browser.',
+    ],
+    steps: STEPS,
+    faqHeading: 'Frequently asked questions',
+    faq: [
+      { q: 'Which documents can I redact?', a: 'Any PDF. If your document is a Word file, save it as a PDF first.' },
+      { q: 'Is the redaction secure?', a: 'Yes. Redacted content is removed from the file and cannot be recovered.' },
+      { q: 'Are documents uploaded?', a: 'No — processing happens locally in your browser.' },
+      { q: 'Does it cost anything?', a: 'No, the tool is free and needs no sign-up.' },
+    ],
+  },
 };

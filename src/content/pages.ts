@@ -58,7 +58,36 @@ export const pages: Record<string, PageDef> = {
   'document-redact': {
     kind: 'landing',
     locales: {
+      en: { slug: 'redact-document', copy: en['document-redact'] },
       de: { slug: 'dokument-schwaerzen', copy: de['document-redact'] },
     },
+  },
+  'pseudonymize-pdf': {
+    kind: 'landing',
+    locales: { en: { slug: 'pseudonymize-pdf', copy: en['pseudonymize-pdf'] } },
+  },
+  'gdpr-pdf': {
+    kind: 'landing',
+    locales: { en: { slug: 'gdpr-pdf', copy: en['gdpr-pdf'] } },
+  },
+  'remove-names-from-pdf': {
+    kind: 'landing',
+    locales: { en: { slug: 'remove-names-from-pdf', copy: en['remove-names-from-pdf'] } },
+  },
+  'censor-pdf': {
+    kind: 'landing',
+    locales: { en: { slug: 'censor-pdf', copy: en['censor-pdf'] } },
+  },
+  'black-out-pdf': {
+    kind: 'landing',
+    locales: { en: { slug: 'black-out-pdf', copy: en['black-out-pdf'] } },
+  },
+  'hide-information-in-pdf': {
+    kind: 'landing',
+    locales: { en: { slug: 'hide-information-in-pdf', copy: en['hide-information-in-pdf'] } },
+  },
+  'remove-personal-information-pdf': {
+    kind: 'landing',
+    locales: { en: { slug: 'remove-personal-information-pdf', copy: en['remove-personal-information-pdf'] } },
   },
 };

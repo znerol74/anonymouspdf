@@ -9,7 +9,20 @@ const t = useTranslations(lang);
 const year = new Date().getFullYear();
 
 // Footer nav, in display order. Each concept appears only in locales that have it.
-const FOOTER_KEYS = ['redact-pdf', 'anonymize-pdf', 'redaction-tool', 'data-masking', 'document-redact'];
+const FOOTER_KEYS = [
+  'redact-pdf',
+  'anonymize-pdf',
+  'pseudonymize-pdf',
+  'censor-pdf',
+  'black-out-pdf',
+  'redaction-tool',
+  'data-masking',
+  'gdpr-pdf',
+  'remove-names-from-pdf',
+  'remove-personal-information-pdf',
+  'hide-information-in-pdf',
+  'document-redact',
+];
 const links = FOOTER_KEYS.map((key) => {
   const entry = pages[key]?.locales[lang];
   const href = pathFor(key, lang);
