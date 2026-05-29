@@ -6,7 +6,7 @@ export const LOCALES = ['en', 'de', 'es', 'fr', 'it', 'pt', 'nl', 'ar', 'lv', 'z
 export type Lang = (typeof LOCALES)[number];
 export const defaultLang: Lang = 'en';
 
-export const LIVE_LOCALES: Lang[] = ['en', 'de'];
+export const LIVE_LOCALES: Lang[] = ['en', 'de', 'es'];
 
 export interface LocaleMeta {
   /** Native name, shown in the language switcher. */

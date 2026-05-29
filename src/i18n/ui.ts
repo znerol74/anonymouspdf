@@ -57,7 +57,34 @@ const de: Record<UiKey, string> = {
   'footer.localnote': 'Die gesamte Verarbeitung erfolgt lokal in Ihrem Browser. Dateien verlassen niemals Ihr Gerät.',
 };
 
+const es: Record<UiKey, string> = {
+  'site.name': 'AnonymousPDF',
+  'site.tagline': 'Tacha y anonimiza PDF en tu navegador',
+  'nav.redact': 'Tachar PDF',
+  'nav.anonymize': 'Anonimizar PDF',
+  'cta.start': 'Tachar un PDF',
+  'hero.title': 'Tacha y anonimiza PDF — directamente en tu navegador',
+  'hero.subtitle':
+    'Suelta un PDF y AnonymousPDF encuentra y elimina automáticamente correos, teléfonos, números de cuenta, identificadores y nombres. No se sube nada: cada archivo se procesa en tu propio dispositivo.',
+  'how.title': 'Cómo funciona',
+  'how.step1.title': '1. Suelta tu PDF',
+  'how.step1.body': 'Selecciona o arrastra un PDF a la página. Se abre localmente: nunca se envía a un servidor.',
+  'how.step2.title': '2. Detectamos los datos sensibles',
+  'how.step2.body': 'Patrones (correos, teléfonos, IBAN, identificadores) y un modelo de IA en el dispositivo para nombres y organizaciones.',
+  'how.step3.title': '3. Descarga el archivo tachado',
+  'how.step3.body': 'Previsualiza el resultado y descarga un PDF con el texto realmente eliminado, o copia el texto limpio.',
+  'trust.local.title': '100% en tu navegador',
+  'trust.local.body': 'Los archivos se procesan en tu dispositivo y nunca se suben a ningún servidor.',
+  'trust.free.title': 'Gratis, sin registro',
+  'trust.free.body': 'Sin cuenta, sin correo, sin marca de agua. Solo ábrelo y listo.',
+  'trust.true.title': 'Tachado real',
+  'trust.true.body': 'El texto subyacente se elimina, no solo se oculta tras un recuadro negro.',
+  'tool.placeholder': 'Aquí se carga la herramienta de tachado de PDF.',
+  'footer.rights': 'Todos los derechos reservados.',
+  'footer.localnote': 'Todo el procesamiento ocurre localmente en tu navegador. Los archivos nunca salen de tu dispositivo.',
+};
+
 export type UiKey = keyof typeof en;
 
 /** Per-locale UI strings. Partial: a missing locale falls back to `defaultLang`. */
-export const ui: Partial<Record<Lang, Record<UiKey, string>>> = { en, de };
+export const ui: Partial<Record<Lang, Record<UiKey, string>>> = { en, de, es };

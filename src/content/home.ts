@@ -17,4 +17,10 @@ export const homeMeta: Partial<Record<Lang, HomeMeta>> = {
       'Kostenloses Online-Tool zum Schwärzen und Anonymisieren von PDF-Dateien. Erkennt und entfernt automatisch E-Mails, Telefonnummern, IBANs, Aktenzeichen und Namen — 100% im Browser. Dateien verlassen niemals Ihr Gerät.',
     priceCurrency: 'EUR',
   },
+  es: {
+    seoTitle: 'AnonymousPDF — Tachar y anonimizar PDF online, gratis y en el navegador',
+    seoDescription:
+      'Herramienta online gratuita para tachar y anonimizar archivos PDF. Detecta y elimina automáticamente correos, teléfonos, IBAN, identificadores y nombres — 100% en tu navegador. Los archivos nunca salen de tu dispositivo.',
+    priceCurrency: 'EUR',
+  },
 };
