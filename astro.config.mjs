@@ -9,9 +9,6 @@ export default defineConfig({
   site: 'https://anonymouspdf.com',
   trailingSlash: 'always',
   integrations: [react(), sitemap()],
-  redirects: {
-    '/': '/en/',
-  },
   vite: {
     plugins: [tailwindcss()],
   },

@@ -1,0 +1,4 @@
+# Cloudflare Pages redirects. Server-side 301 for the bare root → default
+# locale, so there's no client-side meta-refresh flash and Google sees a clean
+# permanent redirect. (Localized roots like /en/ /de/ are real pages.)
+/    /en/    301

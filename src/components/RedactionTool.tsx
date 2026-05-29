@@ -63,6 +63,13 @@ function toSegments(text: string, spans: DetectedSpan[]): Segment[] {
   return segs;
 }
 
+/** Send a GA4 event (no PII — only step names and aggregate counts). */
+function track(event: string, params?: Record<string, unknown>) {
+  if (typeof window !== 'undefined') {
+    (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag?.('event', event, params);
+  }
+}
+
 function Spinner() {
   return (
     <svg className="h-6 w-6 animate-spin text-brand-600" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -92,9 +99,11 @@ export default function RedactionTool({ lang }: Props) {
       if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
         setErrorMsg(t.notPdf);
         setPhase('error');
+        track('process_error', { reason: 'not_pdf' });
         return;
       }
       try {
+        track('file_selected', { lang });
         setPhase('reading');
         const buf = await file.arrayBuffer();
 
@@ -145,10 +154,12 @@ export default function RedactionTool({ lang }: Props) {
           fileName: file.name.replace(/\.pdf$/i, ''),
         });
         setPhase('done');
+        track('process_complete', { redactions: redactionCount, pages: pages.length });
       } catch (err) {
         console.error(err);
         setErrorMsg(t.error);
         setPhase('error');
+        track('process_error', { reason: 'exception' });
       }
     },
     [t],
@@ -169,6 +180,7 @@ export default function RedactionTool({ lang }: Props) {
 
   const download = () => {
     if (!result) return;
+    track('download_pdf', { redactions: result.total });
     const blob = new Blob([result.pdfBytes as Uint8Array<ArrayBuffer>], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -180,6 +192,7 @@ export default function RedactionTool({ lang }: Props) {
 
   const downloadText = () => {
     if (!result) return;
+    track('download_text', { redactions: result.total });
     const blob = new Blob([result.redactedText], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -191,6 +204,7 @@ export default function RedactionTool({ lang }: Props) {
 
   const copy = async () => {
     if (!result) return;
+    track('copy_text', { redactions: result.total });
     await navigator.clipboard.writeText(result.redactedText);
     setCopied(true);
     setTimeout(() => setCopied(false), 1800);
