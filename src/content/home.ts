@@ -23,4 +23,10 @@ export const homeMeta: Partial<Record<Lang, HomeMeta>> = {
       'Herramienta online gratuita para tachar y anonimizar archivos PDF. Detecta y elimina automáticamente correos, teléfonos, IBAN, identificadores y nombres — 100% en tu navegador. Los archivos nunca salen de tu dispositivo.',
     priceCurrency: 'EUR',
   },
+  fr: {
+    seoTitle: 'AnonymousPDF — Caviarder et anonymiser un PDF en ligne, gratuit dans le navigateur',
+    seoDescription:
+      'Outil en ligne gratuit pour caviarder et anonymiser des fichiers PDF. Détecte et supprime automatiquement e-mails, téléphones, IBAN, identifiants et noms — 100 % dans votre navigateur. Les fichiers ne quittent jamais votre appareil.',
+    priceCurrency: 'EUR',
+  },
 };

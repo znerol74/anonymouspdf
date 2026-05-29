@@ -84,7 +84,34 @@ const es: Record<UiKey, string> = {
   'footer.localnote': 'Todo el procesamiento ocurre localmente en tu navegador. Los archivos nunca salen de tu dispositivo.',
 };
 
+const fr: Record<UiKey, string> = {
+  'site.name': 'AnonymousPDF',
+  'site.tagline': 'Caviardez et anonymisez vos PDF dans votre navigateur',
+  'nav.redact': 'Caviarder un PDF',
+  'nav.anonymize': 'Anonymiser un PDF',
+  'cta.start': 'Caviarder un PDF',
+  'hero.title': 'Caviardez et anonymisez vos PDF — directement dans votre navigateur',
+  'hero.subtitle':
+    'Déposez un PDF et AnonymousPDF trouve et supprime automatiquement e-mails, téléphones, numéros de compte, identifiants et noms. Rien n’est envoyé : chaque fichier est traité sur votre propre appareil.',
+  'how.title': 'Comment ça marche',
+  'how.step1.title': '1. Déposez votre PDF',
+  'how.step1.body': 'Sélectionnez ou glissez un PDF sur la page. Il s’ouvre localement — il n’est jamais envoyé à un serveur.',
+  'how.step2.title': '2. Nous détectons les données sensibles',
+  'how.step2.body': 'Des motifs (e-mails, téléphones, IBAN, identifiants) et un modèle d’IA sur l’appareil pour les noms et organisations.',
+  'how.step3.title': '3. Téléchargez le fichier caviardé',
+  'how.step3.body': 'Prévisualisez le résultat, puis téléchargez un PDF dont le texte est vraiment supprimé, ou copiez le texte propre.',
+  'trust.local.title': '100 % dans votre navigateur',
+  'trust.local.body': 'Les fichiers sont traités sur votre appareil et ne sont jamais envoyés à un serveur.',
+  'trust.free.title': 'Gratuit, sans inscription',
+  'trust.free.body': 'Pas de compte, pas d’e-mail, pas de filigrane. Ouvrez et c’est parti.',
+  'trust.true.title': 'Vrai caviardage',
+  'trust.true.body': 'Le texte sous-jacent est supprimé, pas seulement caché derrière un cadre noir.',
+  'tool.placeholder': 'L’outil de caviardage de PDF se charge ici.',
+  'footer.rights': 'Tous droits réservés.',
+  'footer.localnote': 'Tout le traitement se fait localement dans votre navigateur. Les fichiers ne quittent jamais votre appareil.',
+};
+
 export type UiKey = keyof typeof en;
 
 /** Per-locale UI strings. Partial: a missing locale falls back to `defaultLang`. */
-export const ui: Partial<Record<Lang, Record<UiKey, string>>> = { en, de, es };
+export const ui: Partial<Record<Lang, Record<UiKey, string>>> = { en, de, es, fr };
