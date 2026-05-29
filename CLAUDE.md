@@ -8,7 +8,7 @@ they download the anonymized PDF and/or download/copy the anonymized text.
 **Nothing is ever uploaded** — all processing happens client-side in the browser.
 
 Stack: **Astro 5** (static output) + a **React 18 island** for the tool, **Tailwind v4**,
-bilingual (**English + German**), SEO-first.
+**10 languages** (`en, de, es, fr, it, pt, nl, ar [RTL], lv, zh`), SEO-first.
 
 ---
 
@@ -53,11 +53,13 @@ src/
     Landing.astro            # shared landing template (hero + tool + intro + FAQ + trust)
     RedactionTool.tsx        # the React island: UI + orchestrates the pipeline
   pages/
-    en/index.astro, de/index.astro            # homepages
-    en/redact-pdf.astro, en/anonymize-pdf.astro, en/redaction-tool.astro, en/data-masking.astro
-    de/pdf-schwaerzen.astro, de/pdf-anonymisieren.astro, de/dokument-schwaerzen.astro
-  content/landing.ts         # ALL landing-page copy + FAQs (edit marketing text here)
-  i18n/ui.ts, utils.ts, routes.ts   # UI strings, helpers, hreflang pairing
+    [...slug].astro          # ONE catch-all: getStaticPaths generates every locale×concept
+  content/
+    pages.ts                 # SLUGS table (concept→slug per locale) + COPY map → page registry
+    landing/<lang>.ts        # per-locale LandingCopy (en,de,es,fr,it,pt,nl,ar,lv,zh)
+    landing/types.ts         # LandingCopy/HomeMeta types + faqLd()/webAppLd()
+    home.ts                  # per-locale home SEO meta
+  i18n/site.ts, ui.ts, utils.ts, routes.ts  # locales/Lang/LOCALE_META, UI strings, helpers, pathFor/hreflang
   tool/                      # framework-agnostic logic (no React/Astro imports)
     types.ts                 # EntityType union, PRECEDENCE, PSEUDONYM_BASE
     detect/regex.ts          # deterministic pattern detectors (incl. dates)
@@ -66,12 +68,12 @@ src/
     pdf/extract.ts           # pdf.js: page text + per-character geometry
     pdf/redact.ts            # rasterize page → cover spans + draw pseudonyms → rebuild PDF
     anonymize.ts             # consistent pseudonym map + text replacement
-    strings.ts               # tool UI strings (en/de)
+    strings.ts               # tool UI strings (per locale, EN fallback)
   styles/global.css          # Tailwind import + brand color tokens
 public/                      # logo.png, favicon.png, og/default.png, robots.txt, _headers
 test/                        # regex.test.mts, ner.test.mts, anonymize.test.mts
 ```
-The `/` → `/en/` redirect is configured in `astro.config.mjs` (`redirects`), not a page file.
+The `/` → `/en/` redirect is a server-side 301 in `public/_redirects` (no client-side flash).
 
 ---
 
@@ -115,47 +117,65 @@ Downloads from the Hugging Face CDN on first use; the browser caches it afterwar
 
 ---
 
-## i18n & SEO
-- Two languages under `/en` and `/de`. Default locale `en`; both are prefixed.
-- hreflang pairing lives in `src/i18n/routes.ts` (`pageAlternates`). Paired pages
-  cross-link (e.g. `/en/redact-pdf` ↔ `/de/pdf-schwaerzen`) with reciprocal `hreflang`
-  + `x-default`; single-language pages have **no** fabricated alternate.
-- Each landing page sets title, meta description, and `FAQPage` JSON-LD. `@astrojs/sitemap`
-  emits the sitemap; `public/robots.txt` references it; `public/_headers` long-caches
-  hashed assets.
+## i18n & SEO (data-driven)
+Every page is generated from data by ONE catch-all route — `src/pages/[...slug].astro`
++ `getStaticPaths` — there are **no** hand-authored page files. Sources of truth:
+- `src/i18n/site.ts` — `LOCALES` (all 10 supported), `LIVE_LOCALES` (currently published;
+  generation + the language switcher iterate this), `Lang`, `defaultLang`, and `LOCALE_META`
+  (`dir` for RTL, `ogLocale`, `htmlLang`). The central `Lang` type is used everywhere.
+- `src/content/pages.ts` — a `SLUGS` table (concept id → localized slug per locale, e.g.
+  `redact-pdf` → en `redact-pdf`, de `pdf-schwaerzen`, es `tachar-pdf`) + a `COPY` map of
+  per-locale modules. `pages` is built from these; `routes.ts` `pathFor`/`alternatesFor`
+  derive URLs + hreflang from it. Existing en/de slugs are preserved exactly.
+- `src/content/landing/<lang>.ts` — per-locale `LandingCopy` for each concept. `home.ts` —
+  per-locale home SEO meta. `src/i18n/ui/` is `ui.ts` (per-locale UI strings; `t()` falls
+  back to `defaultLang`). `src/tool/strings.ts` — island strings per locale (EN fallback).
+- hreflang: reciprocal `<link rel=alternate>` per cluster + `x-default` in `BaseLayout`,
+  AND injected into the sitemap via a custom `serialize` in `astro.config.mjs` (the built-in
+  sitemap i18n option can't pair per-locale-differing slugs). RTL: `<html dir="rtl">` for `ar`;
+  use logical Tailwind classes (`text-start`, not `text-left`).
+- Each landing page sets title, meta description and `FAQPage` JSON-LD; home sets
+  `WebApplication` JSON-LD. `public/robots.txt` references the sitemap; `public/_headers`
+  long-caches hashed assets; `public/_redirects` does the server-side `/`→`/en/` 301.
 
-### To add a landing page
-1. Add a copy entry (with FAQ) to `src/content/landing.ts`.
-2. Add `src/pages/<lang>/<slug>.astro` that imports `BaseLayout` + `Landing`, passing the
-   copy and `alternatesFor('<key>')`.
-3. If it has a translation, add the slug pair to `pageAlternates` in `src/i18n/routes.ts`.
-4. Add it to the footer nav in `src/components/Footer.astro`.
+### To add a language
+1. `src/content/landing/<lang>.ts` (12 concepts), a `<lang>` block in `src/i18n/ui.ts` and
+   `src/tool/strings.ts`, and a `<lang>` entry in `src/content/home.ts`.
+2. Add the localized slug for each concept under that locale in `SLUGS` (`pages.ts`),
+   import the copy module into `COPY`, and add the locale to `LIVE_LOCALES` (`site.ts`).
+   (`LOCALE_META` already has all 10.) Build — pages, nav, hreflang and sitemap update automatically.
+
+### To add a concept (landing angle)
+Add a `SLUGS['<concept>']` row (slug per locale), the copy under each locale's landing
+module, and the key to `FOOTER_KEYS` in `Footer.astro`. **Keep copy genuinely differentiated
+per concept** (distinct intro/FAQ) — templated near-duplicates risk Google's thin-content filter.
 
 ---
 
 ## Deployment (Cloudflare Pages)
-Currently a **direct-upload** Pages project named `anonymouspdf` in
-**Moritz@lumetsberger.com's** account (`790369fbd60bd3d4d6e34bacbd0c854d`), where the
-`anonymouspdf.com` zone also lives. There is **no git integration**, so deploys are manual:
-```bash
-pnpm build
-CLOUDFLARE_ACCOUNT_ID=790369fbd60bd3d4d6e34bacbd0c854d \
-  npx wrangler pages deploy dist --project-name=anonymouspdf --branch=main
-```
-Custom domains `anonymouspdf.com` + `www` are attached (proxied CNAMEs →
-`anonymouspdf.pages.dev`). `astro.config.mjs` `site` is `https://anonymouspdf.com`
-(canonical URLs + sitemap depend on it).
+Direct-upload Pages project `anonymouspdf` in **Moritz@lumetsberger.com's** account
+(`790369fbd60bd3d4d6e34bacbd0c854d`), where the `anonymouspdf.com` zone also lives.
+Custom domains `anonymouspdf.com` + `www` are attached (proxied CNAMEs → `anonymouspdf.pages.dev`).
 
-To switch to **push-to-deploy**, connect the repo once in the dashboard
-(**Workers & Pages → the project → Settings → Builds & deployments → Connect to Git**,
-preset Astro, build `pnpm build`, output `dist`, branch `main`); the OAuth step can't be
-done via API. Notes: the ONNX `.wasm` runtime is ~21 MB (under Cloudflare's 25 MB/file
-limit); `_headers` caches `/_astro/*` and `*.wasm` immutably.
+**Auto-deploy on push to `main`** via GitHub Actions (`.github/workflows/deploy.yml`):
+install → test → build → `npx wrangler pages deploy`. It uses the `CLOUDFLARE_API_TOKEN`
+repo secret (Cloudflare Pages: Edit, scoped to the account) — the account ID is inlined.
+There is no Cloudflare↔GitHub git integration (the repo lives under a different GitHub
+account than the CF app's), so this Action is the deploy mechanism.
+
+Manual deploy (if ever needed): `pnpm build && CLOUDFLARE_ACCOUNT_ID=790369fbd60bd3d4d6e34bacbd0c854d
+npx wrangler pages deploy dist --project-name=anonymouspdf --branch=main`.
+
+Notes: the ONNX `.wasm` runtime is ~21 MB (under Cloudflare's 25 MB/file limit); `_headers`
+caches `/_astro/*` and `*.wasm` immutably. `astro.config.mjs` `site` is `https://anonymouspdf.com`.
 
 ---
 
 ## Analytics
 - GA4 is wired in `src/layouts/BaseLayout.astro` (measurement ID `G-RP56CCTV9B`).
+- The tool funnel is tracked via `gtag` events in `RedactionTool.tsx` (no PII, only step +
+  aggregate counts): `file_selected` → `process_complete` (`redactions`, `pages`) →
+  `download_pdf` / `download_text` / `copy_text`, plus `process_error`.
 - Search Console: add the property and verify via the **Google Analytics** method (the
   GA tag is already in `<head>`), then submit `https://anonymouspdf.com/sitemap-index.xml`.
 - GA currently loads unconditionally; if you need EU cookie consent, gate the gtag snippet.

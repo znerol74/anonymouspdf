@@ -192,7 +192,88 @@ const nl: Record<UiKey, string> = {
   'footer.localnote': 'Alle verwerking gebeurt lokaal in je browser. Bestanden verlaten nooit je apparaat.',
 };
 
+const ar: Record<UiKey, string> = {
+  'site.name': 'AnonymousPDF',
+  'site.tagline': 'نقّح وأخفِ هوية ملفات PDF في متصفحك',
+  'nav.redact': 'تنقيح PDF',
+  'nav.anonymize': 'إخفاء هوية PDF',
+  'cta.start': 'تنقيح ملف PDF',
+  'hero.title': 'نقّح وأخفِ هوية ملفات PDF — مباشرةً في متصفحك',
+  'hero.subtitle':
+    'أسقط ملف PDF وسيجد AnonymousPDF ويزيل تلقائيًا البريد الإلكتروني والهواتف وأرقام الحسابات والمعرّفات والأسماء. لا يُرفع أي شيء: تتم معالجة كل ملف على جهازك.',
+  'how.title': 'كيف يعمل',
+  'how.step1.title': '1. أسقط ملف PDF',
+  'how.step1.body': 'اختر أو اسحب ملف PDF إلى الصفحة. يُفتح محليًا — ولا يُرسل أبدًا إلى خادم.',
+  'how.step2.title': '2. نكتشف البيانات الحساسة',
+  'how.step2.body': 'أنماط (بريد، هواتف، IBAN، معرّفات) ونموذج ذكاء اصطناعي على الجهاز للأسماء والمنظمات.',
+  'how.step3.title': '3. نزّل الملف المنقّح',
+  'how.step3.body': 'عاين النتيجة، ثم نزّل ملف PDF مع إزالة النص فعليًا، أو انسخ النص النظيف.',
+  'trust.local.title': '100% في متصفحك',
+  'trust.local.body': 'تتم معالجة الملفات على جهازك ولا تُرفع أبدًا إلى أي خادم.',
+  'trust.free.title': 'مجاني، بدون تسجيل',
+  'trust.free.body': 'بدون حساب، بدون بريد، بدون علامة مائية. افتح وابدأ.',
+  'trust.true.title': 'تنقيح حقيقي',
+  'trust.true.body': 'يُزال النص الأساسي، لا يُخفى فقط خلف مربع أسود.',
+  'tool.placeholder': 'تُحمّل أداة تنقيح PDF هنا.',
+  'footer.rights': 'جميع الحقوق محفوظة.',
+  'footer.localnote': 'تتم كل المعالجة محليًا في متصفحك. الملفات لا تغادر جهازك أبدًا.',
+};
+
+const lv: Record<UiKey, string> = {
+  'site.name': 'AnonymousPDF',
+  'site.tagline': 'Aizkrāsojiet un anonimizējiet PDF savā pārlūkā',
+  'nav.redact': 'Aizkrāsot PDF',
+  'nav.anonymize': 'Anonimizēt PDF',
+  'cta.start': 'Aizkrāsot PDF',
+  'hero.title': 'Aizkrāsojiet un anonimizējiet PDF — tieši savā pārlūkā',
+  'hero.subtitle':
+    'Ievelciet PDF, un AnonymousPDF automātiski atradīs un noņems e-pastus, tālruņus, kontu numurus, identifikatorus un vārdus. Nekas netiek augšupielādēts: katrs fails tiek apstrādāts jūsu ierīcē.',
+  'how.title': 'Kā tas darbojas',
+  'how.step1.title': '1. Ievelciet savu PDF',
+  'how.step1.body': 'Izvēlieties vai velciet PDF uz lapas. Tas atveras lokāli — nekad netiek sūtīts uz serveri.',
+  'how.step2.title': '2. Mēs atpazīstam jutīgos datus',
+  'how.step2.body': 'Šabloni (e-pasti, tālruņi, IBAN, identifikatori) un ierīcē darbināts MI modelis vārdiem un organizācijām.',
+  'how.step3.title': '3. Lejupielādējiet aizkrāsoto failu',
+  'how.step3.body': 'Priekšskatiet rezultātu, pēc tam lejupielādējiet PDF ar patiešām noņemtu tekstu vai kopējiet tīro tekstu.',
+  'trust.local.title': '100% jūsu pārlūkā',
+  'trust.local.body': 'Faili tiek apstrādāti jūsu ierīcē un nekad netiek augšupielādēti nevienā serverī.',
+  'trust.free.title': 'Bez maksas, bez reģistrācijas',
+  'trust.free.body': 'Bez konta, bez e-pasta, bez ūdenszīmes. Vienkārši atveriet un sāciet.',
+  'trust.true.title': 'Īsta aizkrāsošana',
+  'trust.true.body': 'Pamatā esošais teksts tiek noņemts, nevis tikai paslēpts aiz melna lauka.',
+  'tool.placeholder': 'Šeit ielādējas PDF aizkrāsošanas rīks.',
+  'footer.rights': 'Visas tiesības aizsargātas.',
+  'footer.localnote': 'Visa apstrāde notiek lokāli jūsu pārlūkā. Faili nekad neatstāj jūsu ierīci.',
+};
+
+const zh: Record<UiKey, string> = {
+  'site.name': 'AnonymousPDF',
+  'site.tagline': '在浏览器中涂黑并匿名化 PDF',
+  'nav.redact': '涂黑 PDF',
+  'nav.anonymize': '匿名化 PDF',
+  'cta.start': '涂黑 PDF',
+  'hero.title': '在浏览器中直接涂黑并匿名化 PDF',
+  'hero.subtitle':
+    '拖入一个 PDF，AnonymousPDF 会自动查找并删除邮箱、电话、账号、标识符和姓名。不上传任何内容：每个文件都在你自己的设备上处理。',
+  'how.title': '工作原理',
+  'how.step1.title': '1. 拖入你的 PDF',
+  'how.step1.body': '选择或将 PDF 拖到页面上。它在本地打开——绝不发送到服务器。',
+  'how.step2.title': '2. 我们检测敏感数据',
+  'how.step2.body': '模式（邮箱、电话、IBAN、标识符）和用于姓名和组织的设备端 AI 模型。',
+  'how.step3.title': '3. 下载涂黑后的文件',
+  'how.step3.body': '预览结果，然后下载真正删除了文本的 PDF，或复制干净的文本。',
+  'trust.local.title': '100% 在你的浏览器中',
+  'trust.local.body': '文件在你的设备上处理，绝不上传到任何服务器。',
+  'trust.free.title': '免费，无需注册',
+  'trust.free.body': '无需账户、无需邮箱、无水印。打开即用。',
+  'trust.true.title': '真正的涂黑',
+  'trust.true.body': '底层文本被删除，而不仅仅是隐藏在黑框后面。',
+  'tool.placeholder': 'PDF 涂黑工具在此加载。',
+  'footer.rights': '保留所有权利。',
+  'footer.localnote': '所有处理都在你的浏览器本地进行。文件绝不离开你的设备。',
+};
+
 export type UiKey = keyof typeof en;
 
 /** Per-locale UI strings. Partial: a missing locale falls back to `defaultLang`. */
-export const ui: Partial<Record<Lang, Record<UiKey, string>>> = { en, de, es, fr, it, pt, nl };
+export const ui: Partial<Record<Lang, Record<UiKey, string>>> = { en, de, es, fr, it, pt, nl, ar, lv, zh };

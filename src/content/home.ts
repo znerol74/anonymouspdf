@@ -47,4 +47,22 @@ export const homeMeta: Partial<Record<Lang, HomeMeta>> = {
       'Gratis online tool om PDF-bestanden zwart te lakken en te anonimiseren. Detecteert en verwijdert automatisch e-mails, telefoons, IBANs, identificatienummers en namen — 100% in je browser. Bestanden verlaten nooit je apparaat.',
     priceCurrency: 'EUR',
   },
+  ar: {
+    seoTitle: 'AnonymousPDF — تنقيح وإخفاء هوية PDF عبر الإنترنت، مجانًا في المتصفح',
+    seoDescription:
+      'أداة مجانية عبر الإنترنت لتنقيح وإخفاء هوية ملفات PDF. تكتشف وتزيل تلقائيًا البريد والهواتف وأرقام IBAN والمعرّفات والأسماء — 100% في متصفحك. الملفات لا تغادر جهازك أبدًا.',
+    priceCurrency: 'USD',
+  },
+  lv: {
+    seoTitle: 'AnonymousPDF — Aizkrāsot un anonimizēt PDF tiešsaistē, bez maksas pārlūkā',
+    seoDescription:
+      'Bezmaksas tiešsaistes rīks PDF failu aizkrāsošanai un anonimizēšanai. Automātiski atpazīst un noņem e-pastus, tālruņus, IBAN, identifikatorus un vārdus — 100% jūsu pārlūkā. Faili nekad neatstāj jūsu ierīci.',
+    priceCurrency: 'EUR',
+  },
+  zh: {
+    seoTitle: 'AnonymousPDF — 在线涂黑并匿名化 PDF，浏览器中免费使用',
+    seoDescription:
+      '免费的在线工具，用于涂黑和匿名化 PDF 文件。自动检测并删除邮箱、电话、IBAN、标识符和姓名——100% 在你的浏览器中。文件绝不离开你的设备。',
+    priceCurrency: 'USD',
+  },
 };

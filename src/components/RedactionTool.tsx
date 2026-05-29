@@ -231,7 +231,7 @@ export default function RedactionTool({ lang }: Props) {
               : '';
 
   return (
-    <div className="mx-auto mt-10 max-w-2xl text-left">
+    <div className="mx-auto mt-10 max-w-2xl text-start">
       {phase === 'idle' || phase === 'error' ? (
         <div
           onDragOver={(e) => {
