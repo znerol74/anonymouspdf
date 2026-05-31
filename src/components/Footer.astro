@@ -27,14 +27,14 @@ const links = FOOTER_KEYS.map((key) => {
   const entry = pages[key]?.locales[lang];
   const href = pathFor(key, lang);
   if (!entry || !href) return null;
-  return { href, label: (entry.copy as LandingCopy).navLabel };
-}).filter((l): l is { href: string; label: string } => l !== null);
+  return { key, href, label: (entry.copy as LandingCopy).navLabel };
+}).filter((l): l is { key: string; href: string; label: string } => l !== null);
 ---
 
 <footer class="border-t border-slate-200 bg-slate-50">
   <div class="mx-auto max-w-6xl px-4 py-8 text-sm text-slate-500">
     <nav class="mb-6 flex flex-wrap gap-x-6 gap-y-2">
-      {links.map((l) => <a href={l.href} class="font-medium text-slate-600 hover:text-brand-700">{l.label}</a>)}
+      {links.map((l) => <a href={l.href} data-track="footer_click" data-track-target={l.key} class="font-medium text-slate-600 hover:text-brand-700">{l.label}</a>)}
     </nav>
     <p class="mb-2 font-medium text-slate-700">{t('footer.localnote')}</p>
     <p>© {year} {t('site.name')}. {t('footer.rights')}</p>

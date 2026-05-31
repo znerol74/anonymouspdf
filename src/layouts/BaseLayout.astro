@@ -50,6 +50,19 @@ const xDefault = alternates.find((a) => a.locale === defaultLang) ?? alternates[
       gtag('config', 'G-RP56CCTV9B');
     </script>
 
+    <!-- Delegating click tracker: any <a data-track="event" data-track-target="…"> fires a GA4 event. -->
+    <script is:inline>
+      document.addEventListener('click', function (e) {
+        var el = e.target && e.target.closest && e.target.closest('a[data-track]');
+        if (!el) return;
+        if (typeof window.gtag !== 'function') return;
+        window.gtag('event', el.getAttribute('data-track'), {
+          target: el.getAttribute('data-track-target'),
+          lang: document.documentElement.lang,
+        });
+      }, true);
+    </script>
+
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />

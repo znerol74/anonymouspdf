@@ -18,13 +18,13 @@ const anonymize = pathFor('anonymize-pdf', lang);
 
 <header class="border-b border-slate-200 bg-white">
   <nav class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
-    <a href={home} class="flex items-center gap-2 text-lg font-bold text-slate-900">
+    <a href={home} data-track="nav_click" data-track-target="home" class="flex items-center gap-2 text-lg font-bold text-slate-900">
       <img src="/logo.png" alt="AnonymousPDF" width="28" height="28" class="h-7 w-7" />
       <span>{t('site.name')}</span>
     </a>
     <div class="flex items-center gap-5 text-sm font-medium text-slate-600">
-      {redact && <a href={redact} class="hidden hover:text-brand-700 sm:inline">{t('nav.redact')}</a>}
-      {anonymize && <a href={anonymize} class="hidden hover:text-brand-700 sm:inline">{t('nav.anonymize')}</a>}
+      {redact && <a href={redact} data-track="nav_click" data-track-target="redact-pdf" class="hidden hover:text-brand-700 sm:inline">{t('nav.redact')}</a>}
+      {anonymize && <a href={anonymize} data-track="nav_click" data-track-target="anonymize-pdf" class="hidden hover:text-brand-700 sm:inline">{t('nav.anonymize')}</a>}
       <LanguageSwitcher alternates={alternates} />
     </div>
   </nav>
